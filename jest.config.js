@@ -9,5 +9,7 @@ module.exports = {
     roots: ["<rootDir>/src"],
     moduleFileExtensions: ["ts", "js", "json", "node"],
     preset: "ts-jest",
+    setupFiles: ["dotenv/config"]
+
   };
   

@@ -3,7 +3,6 @@ import { checkIfAuthenticated } from "../middlewares/auth.middleware";
 import { logReq, logRes } from "../middlewares/log.middleware";
 import userController from "../controllers/user.controller";
 
-
 export default ({ app }: TRoutesInput) => {
   let base = "/api/users";
 
@@ -29,12 +28,12 @@ export default ({ app }: TRoutesInput) => {
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
-      const requestedUser = await userController.GetByGoogleId(req.params.id);
-      if (requestedUser.googleId != req.googleId) {
-        return res.status(403);
+      const requestedUser = await userController.GetById(req.params.id);
+      if (!requestedUser._id.equals(req.user._id)) {
+        return res.status(403).send();
       }
       logRes(200, requestedUser);
-      res.status(200).send(requestedUser);
+      return res.status(200).send(requestedUser);
     }
   );
 
@@ -46,24 +45,19 @@ export default ({ app }: TRoutesInput) => {
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
-      console.log("PUT: " + base);
-      /*try {
-      const id = req.params.id;
-      const { title, publicSong, genres } = <ISong>req.body;
+      try {
+        const requestedUser = await userController.GetById(req.params.id);
+        if (!requestedUser._id.equals(req.user._id)) {
+          return res.status(403).send();
+        }
+        const updates = req.body;
 
-      const user = await userController.GetUserByGoogleId(req.googleId);
-      const song = await songController.GetSongById(id);
-
-      if(!song.ownerId.equals(user._id)) {
-        return res.status(403).send();
+        const updatedUser = await userController.Update(requestedUser, updates);
+        logRes(200, updatedUser);
+        return res.status(200).send(updatedUser);
+      } catch (e) {
+        res.status(500).send();
       }
-      const genre = await songController.UpdateSong(<ISong>{ id, title, publicSong, genres });
-      res.status(200).send(genre);
-    } catch (e) {
-      console.log(e);
-      res.status(500).send();
-    }
-    */
     }
   );
 

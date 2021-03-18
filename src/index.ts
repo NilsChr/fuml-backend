@@ -48,12 +48,15 @@ app.get("/", (req: Request, res: Response) =>
   res.send("Welcome to the Mongoose & TypeScript example")
 );
 
-app.listen(port, () =>
+export const server = app.listen(port, () =>
   console.log(`Application started successfully on port ${port}.`)
 );
 
-const db = process.env.DB_URI;
-connect({ db });
-
+if(process.env.NODE_ENV === 'production') {
+  const db = process.env.DB_URI;
+  connect({ db });
+}
 
 userRoutes({app});
+
+export default app;

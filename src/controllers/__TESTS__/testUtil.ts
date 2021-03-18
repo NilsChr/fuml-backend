@@ -64,7 +64,6 @@ const testUtil = {
       resolve(sequenceDocument);
     });
   },
-
   async generateRandomEntityDocument(
     ownerId: mongoose.Types.ObjectId,
     projectId: mongoose.Types.ObjectId
@@ -82,7 +81,6 @@ const testUtil = {
       resolve(sequenceDocument);
     });
   },
-
   async wait(time: number): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(function () {
@@ -96,7 +94,7 @@ const testUtil = {
       data += "a";
     }
     return data;
-  },
+  }
 };
 
 export default testUtil;

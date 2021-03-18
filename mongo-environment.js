@@ -16,13 +16,19 @@ module.exports = class MongoEnvironment extends NodeEnvironment {
     this.global.__MONGO_URI__ = globalConfig.mongoUri;
     this.global.__MONGO_DB_NAME__ = globalConfig.mongoDBName;
 
-    await super.setup();
+    try {
+      await super.setup();
+
+    } catch(e) {}
   }
 
   async teardown() {
     console.log("Teardown MongoDB Test Environment");
 
-    await super.teardown();
+    try {
+      await super.teardown();
+
+    } catch(e) {}
   }
 
   runScript(script) {

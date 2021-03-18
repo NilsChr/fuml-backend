@@ -34,11 +34,11 @@ const checkIfAuthenticated = (req: any, res: any, next: any) => {
       req.userName = userInfo.userName;
 
       try {
-        req.user = await UserController.GetByGoogleId(userInfo.uid);
+        req.user = await UserController.GetByEmail(userInfo.email);
         if (!req.user) throw "no user found";
         console.log("Found user");
       } catch (e) {
-        console.log("Creating new user");
+        //console.log("Creating new user");
         req.user = await UserController.Create({
           nickName: "",
           avatarUrl: userInfo.picture,
@@ -50,10 +50,10 @@ const checkIfAuthenticated = (req: any, res: any, next: any) => {
         });
       }
 
-      console.log("user found: ", req.user);
+      //console.log("user found: ", req.user);
       return next();
     } catch (e) {
-      console.log(e);
+      //console.log(e);
       return res
         .status(401)
         .send({ error: "You are not authorized to make this request" });
