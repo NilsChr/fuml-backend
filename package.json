@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "export NODE_ENV='development' && nodemon",
-    "test": "export NODE_ENV='development' && jest --runInBand --silent",
+    "test": "export NODE_ENV='development' && jest --runInBand",
     "start": "node ./dist/index.js",
     "build": "tsc",
     "deploy": "git push heroku master"

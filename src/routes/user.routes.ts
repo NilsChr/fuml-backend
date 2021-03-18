@@ -66,21 +66,16 @@ export default ({ app }: TRoutesInput) => {
    */
   app.delete(base + "/:id", logReq, async (req: any, res: any, next: any) => {
     console.log("DELETE: " + base);
-    /*try {
-      const id = req.params.id;
-      const user = await userController.GetUserByGoogleId(req.googleId);
-      const song = await songController.GetSongById(id);
-      if(!song.ownerId.equals(user._id)) {
+    try {
+      const requestedUser = await userController.GetById(req.params.id);
+      if (!requestedUser._id.equals(req.user._id)) {
         return res.status(403).send();
       }
-
-      await songController.DeleteSong(id);
-
-      res.status(200).send();
+      const deletedUser = await userController.Delete(requestedUser._id);
+      logRes(200, deletedUser);
+      return res.status(200).send(deletedUser);
     } catch (e) {
-      console.log(e);
       res.status(500).send();
     }
-    */
   });
 };

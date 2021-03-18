@@ -68,8 +68,12 @@ async function Update(user: IUser, updates: IUserUpdatesDTO): Promise<IUser> {
         email: updates.email,
         nickName: updates.nickName,
         avatarUrl: updates.avatarUrl,
-        projects: updates.projects
+        //projects: updates.projects 
       }
+      /**
+       * Dont update projects. Let project controller take care of this.
+       * if user is updated through a PUT request, this can mess this up
+       */
 
       const updatedUser = await User.findByIdAndUpdate(user._id, sanitizedUpdates, { new: true });
 

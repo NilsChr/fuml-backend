@@ -9,7 +9,7 @@ import bodyParser from "body-parser";
 import connect from "./connect";
 import cors from "cors";
 
-import userRoutes from "./routes/user.routes";
+import routeRegistry from "./routes/routeRegistry";
 
 
 const app: Application = express();
@@ -18,12 +18,12 @@ const port = process.env.PORT || 8080;
 app.use(bodyParser.json( {limit: '100mb'}));
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-
+/*
 const fileUpload = require('express-fileupload');
 app.use(fileUpload({
     createParentPath: true
 }));
-
+*/
 
 app.use(cors());
 app.options('*', cors());
@@ -45,7 +45,7 @@ app.use(function (req, res, next) {
 });
 
 app.get("/", (req: Request, res: Response) =>
-  res.send("Welcome to the Mongoose & TypeScript example")
+  res.send("Welcome to fuml. Api at /api/")
 );
 
 export const server = app.listen(port, () =>
@@ -57,6 +57,7 @@ if(process.env.NODE_ENV === 'production') {
   connect({ db });
 }
 
-userRoutes({app});
+//userRoutes({app});
+routeRegistry({app});
 
 export default app;

@@ -104,6 +104,9 @@ describe("User Controller", () => {
 
     const projectsAfterRemoval = await projectController.GetById(project._id);
     expect(projectsAfterRemoval.collaborators.length).toBe(1);
+
+    const userAfterUpdate = await userController.GetById(user._id);
+    expect(userAfterUpdate.projects.length).toBe(0);
   });
 
   it("Should delete a project", async () => {

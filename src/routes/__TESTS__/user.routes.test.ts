@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import request from "supertest";
 import userController from "../../controllers/user.controller";
-import testUtil from "../../controllers/__TESTS__/testUtil";
 import testUtilFirebase from "../../controllers/__TESTS__/testUtilFirebase";
 import app, { server } from "../../index";
 import { IUser } from "../../models/user.model";
@@ -98,16 +97,16 @@ describe("User routes", () => {
 
     const user: IUser = (<any>res).body;
 
-    user.nickName = 'master';
+    user.nickName = "master";
     const res2 = await request(app)
-    .put("/api/users/" + user._id)
-    .set({ Authorization: "Bearer " + token })
-    .send(user);
+      .put("/api/users/" + user._id)
+      .set({ Authorization: "Bearer " + token })
+      .send(user);
 
     expect(res2.status).toBe(200);
 
     const updatedUser = await userController.GetById(user._id);
-    expect(updatedUser.nickName).toBe('master');
+    expect(updatedUser.nickName).toBe("master");
   });
 
   it("Should try to update other users nickname", async () => {
@@ -124,19 +123,17 @@ describe("User routes", () => {
       .get("/api/account")
       .set({ Authorization: "Bearer " + token2 })
       .send();
-      const user2: IUser = (<any>res2).body;
+    const user2: IUser = (<any>res2).body;
 
-    
-    user2.nickName = 'master';
+    user2.nickName = "master";
     const res3 = await request(app)
-    .put("/api/users/" + user2._id)
-    .set({ Authorization: "Bearer " + token })
-    .send(user2);
+      .put("/api/users/" + user2._id)
+      .set({ Authorization: "Bearer " + token })
+      .send(user2);
 
     expect(res3.status).toBe(403);
 
     const updatedUser = await userController.GetById(user2._id);
-    expect(updatedUser.nickName).toBe('');
-    
+    expect(updatedUser.nickName).toBe("");
   });
 });
