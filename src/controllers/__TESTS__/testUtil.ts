@@ -1,7 +1,11 @@
 import mongoose from "mongoose";
+import { IEntityDocument } from "../../models/entityDocument.model";
 import { IProject } from "../../models/project.model";
+import { ISequenceDocument } from "../../models/sequenceDocument.model";
 import { IUser } from "../../models/user.model";
+import entityDocumentController from "../entityDocument.controller";
 import projectController from "../project.controller";
+import sequenceDocumentController from "../sequenceDocument.controller";
 import userController from "../user.controller";
 
 const testUtil = {
@@ -15,34 +19,70 @@ const testUtil = {
     return out;
   },
   async generateRandomUser(): Promise<IUser> {
-
     return new Promise((resolve) => {
       const user = userController.Create({
-        nickName:  this.generateRandomName(),
-        avatarUrl:  this.generateRandomName(),
-        email:  this.generateRandomName(),
-        googleId:  this.generateRandomName(),
+        nickName: this.generateRandomName(),
+        avatarUrl: this.generateRandomName(),
+        email: this.generateRandomName(),
+        googleId: this.generateRandomName(),
         isAdmin: false,
         projects: [],
-        created: new Date().getTime()
+        created: new Date().getTime(),
       });
       resolve(user);
     });
-    
   },
-  async generateRandomProject(ownerId: mongoose.Types.ObjectId): Promise<IProject> {
-
+  async generateRandomProject(
+    ownerId: mongoose.Types.ObjectId
+  ): Promise<IProject> {
     return new Promise((resolve) => {
       const project = projectController.Create({
-        title:  this.generateRandomName(),
-        documents: [],
+        title: this.generateRandomName(),
+        entityDocuments: [],
+        sequenceDocuments: [],
         ownerId: ownerId,
         created: new Date().getTime(),
-        collaborators: []
+        collaborators: [],
       });
       resolve(project);
     });
   },
+  async generateRandomSequenceDocument(
+    ownerId: mongoose.Types.ObjectId,
+    projectId: mongoose.Types.ObjectId
+  ): Promise<ISequenceDocument> {
+    return new Promise((resolve) => {
+      const sequenceDocument = sequenceDocumentController.Create({
+        title: this.generateRandomName(),
+        projectId: projectId,
+        ownerId: ownerId,
+        created: new Date().getTime(),
+        sequenceParts: [],
+        sequenceParticipants: [],
+        type: ''
+      });
+      resolve(sequenceDocument);
+    });
+  },
+
+  async generateRandomEntityDocument(
+    ownerId: mongoose.Types.ObjectId,
+    projectId: mongoose.Types.ObjectId
+  ): Promise<IEntityDocument> {
+    return new Promise((resolve) => {
+      const sequenceDocument = entityDocumentController.Create({
+        title: this.generateRandomName(),
+        projectId: projectId,
+        ownerId: ownerId,
+        created: new Date().getTime(),
+        entityProperties: [],
+        entityRelations: [],
+        type: ''
+      });
+      resolve(sequenceDocument);
+    });
+  },
+
   async wait(time: number): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(function () {

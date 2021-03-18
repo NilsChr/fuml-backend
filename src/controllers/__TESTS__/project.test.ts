@@ -27,7 +27,9 @@ describe("User Controller", () => {
     const project = await testUtil.generateRandomProject(user._id);
     expect(project).not.toBeNull();
     expect(project.ownerId).toEqual(user._id);
-    expect(project.documents.length).toEqual(0);
+    expect(project.entityDocuments.length).toEqual(0);
+    expect(project.sequenceDocuments.length).toEqual(0);
+
     expect(project.collaborators.length).toEqual(1);
   });
 
@@ -70,9 +72,7 @@ describe("User Controller", () => {
 
     await projectController.AddCollaborator(user2, project);
 
-    const projectsAfterUpdate = await projectController.GetById(
-      project._id
-    );
+    const projectsAfterUpdate = await projectController.GetById(project._id);
     expect(projectsAfterUpdate.collaborators.length).toBe(2);
   });
 
@@ -84,9 +84,7 @@ describe("User Controller", () => {
 
     await projectController.AddCollaborator(user, project);
 
-    const projectsAfterUpdate = await projectController.GetById(
-      project._id
-    );
+    const projectsAfterUpdate = await projectController.GetById(project._id);
     expect(projectsAfterUpdate.collaborators.length).toBe(1);
   });
 
@@ -99,28 +97,26 @@ describe("User Controller", () => {
 
     await projectController.AddCollaborator(user2, project);
 
-    const projectsAfterUpdate = await projectController.GetById(
-      project._id
-    );
+    const projectsAfterUpdate = await projectController.GetById(project._id);
     expect(projectsAfterUpdate.collaborators.length).toBe(2);
 
-    await projectController.RemoveCollaborator(user,project);
+    await projectController.RemoveCollaborator(user, project);
 
-    const projectsAfterRemoval = await projectController.GetById(
-        project._id
-      );
-      expect(projectsAfterRemoval.collaborators.length).toBe(1);
-  });
-
-  it("Should add document to project", async () => {
-    fail();
-  });
-
-  it("Should remove document from project", async () => {
-    fail();
+    const projectsAfterRemoval = await projectController.GetById(project._id);
+    expect(projectsAfterRemoval.collaborators.length).toBe(1);
   });
 
   it("Should delete a project", async () => {
-    fail();
+    const user = await testUtil.generateRandomUser();
+    const project = await testUtil.generateRandomProject(user._id);
+    expect(project).not.toBeNull();
+
+    const allProjectsBeforeDelete = await projectController.Get();
+    expect(allProjectsBeforeDelete.length).toBe(1);
+
+    await projectController.Delete(project._id);
+
+    const allProjectsAfter = await projectController.Get();
+    expect(allProjectsAfter.length).toBe(0);
   });
 });

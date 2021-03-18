@@ -92,7 +92,8 @@ async function Update(
       const sanitizedUpdates = {
         title: updates.title,
         collaborators: updates.collaborators,
-        documents: updates.documents,
+        entityDocuments: updates.entityDocuments,
+        sequenceDocuments: updates.sequenceDocuments,
       };
 
       const updatedProject = await Project.findByIdAndUpdate(
