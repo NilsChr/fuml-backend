@@ -9,6 +9,7 @@ import bodyParser from "body-parser";
 import connect from "./connect";
 import cors from "cors";
 
+import apicache from 'apicache';
 import routeRegistry from "./routes/routeRegistry";
 
 
@@ -17,6 +18,9 @@ const port = process.env.PORT || 8080;
 
 app.use(bodyParser.json( {limit: '100mb'}));
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
+//const cache = apicache.middleware;
+//app.use(cache('5 minutes'));
 
 /*
 const fileUpload = require('express-fileupload');

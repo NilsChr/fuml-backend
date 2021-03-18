@@ -64,7 +64,7 @@ export default ({ app }: TRoutesInput) => {
   /**
    * Delete User
    */
-  app.delete(base + "/:id", logReq, async (req: any, res: any, next: any) => {
+  app.delete(base + "/:id", logReq,checkIfAuthenticated, async (req: any, res: any, next: any) => {
     console.log("DELETE: " + base);
     try {
       const requestedUser = await userController.GetById(req.params.id);
@@ -75,6 +75,7 @@ export default ({ app }: TRoutesInput) => {
       logRes(200, deletedUser);
       return res.status(200).send(deletedUser);
     } catch (e) {
+      console.log(e);
       res.status(500).send();
     }
   });

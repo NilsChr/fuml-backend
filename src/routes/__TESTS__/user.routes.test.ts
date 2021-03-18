@@ -109,7 +109,7 @@ describe("User routes", () => {
     expect(updatedUser.nickName).toBe("master");
   });
 
-  it("Should try to update other users nickname", async () => {
+  it("Should delete a user", async () => {
     const token = await testUtilFirebase.loginFirebase();
     const res = await request(app)
       .get("/api/account")
@@ -135,5 +135,25 @@ describe("User routes", () => {
 
     const updatedUser = await userController.GetById(user2._id);
     expect(updatedUser.nickName).toBe("");
+  });
+
+  it("Should try to update other users nickname", async () => {
+    const token = await testUtilFirebase.loginFirebase();
+    const res = await request(app)
+      .get("/api/account")
+      .set({ Authorization: "Bearer " + token })
+      .send();
+
+    const user: IUser = (<any>res).body;
+
+    const res2 = await request(app)
+    .delete("/api/users/" + user._id)
+    .set({ Authorization: "Bearer " + token })
+    .send();
+
+    expect(res2.status).toBe(200);
+
+    const userAfterDelete = await userController.GetById(user._id);
+    expect(userAfterDelete).toBeNull();
   });
 });
