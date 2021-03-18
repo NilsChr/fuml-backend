@@ -14,10 +14,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/backblaze-b2": "^1.5.0",
     "@types/cors": "^2.8.7",
     "aws-sdk": "^2.853.0",
-    "backblaze-b2": "^1.6.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
