@@ -24,7 +24,7 @@ export default ({ app }: TRoutesInput) => {
    * Get User by Id
    */
   app.get(
-    "/api/users/:id",
+    base +"/:id",
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {

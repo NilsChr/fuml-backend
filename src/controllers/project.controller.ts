@@ -5,11 +5,16 @@ import Project, {
   IProjectUpdatesDTO,
 } from "../models/project.model";
 import { IUser } from "../models/user.model";
+import userController from "./user.controller";
 
 async function Create(project: IProjectDTO): Promise<IProject> {
   project.collaborators.push(project.ownerId);
   return Project.create(project)
-    .then((data: IProject) => {
+    .then(async (data: IProject) => {
+      const user = await userController.GetById(project.ownerId);
+      user.projects.push(data._id);
+      await userController.Update(user, user);
+
       return data;
     })
     .catch((error: Error) => {
@@ -61,6 +66,8 @@ async function AddCollaborator(
         return resolve(project);
       }
       project.collaborators.push(user._id);
+      user.projects.push(project._id);
+      await userController.Update(user,user);
       resolve(await Update(project, project));
     } catch (e) {
       reject(e);
@@ -69,19 +76,25 @@ async function AddCollaborator(
 }
 
 async function RemoveCollaborator(
-    user: IUser,
-    project: IProject
-  ): Promise<IProject> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const index = project.collaborators.indexOf(user._id);
-        project.collaborators.splice(index,1);
-        resolve(await Update(project, project));
-      } catch (e) {
-        reject(e);
-      }
-    });
-  }
+  user: IUser,
+  project: IProject
+): Promise<IProject> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const index = project.collaborators.indexOf(user._id);
+      project.collaborators.splice(index, 1);
+
+      const projectIndex = user.projects.indexOf(project._id);
+      user.projects.splice(projectIndex,1);
+      await userController.Update(user,user);
+
+      const updated = await Update(project, project);
+      resolve(updated);
+    } catch (e) {
+      reject(e);
+    }
+  });
+}
 
 async function Update(
   project: IProject,
@@ -110,15 +123,15 @@ async function Update(
 }
 
 async function Delete(id: mongoose.Types.ObjectId): Promise<boolean> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let deleted = await Project.findByIdAndDelete(id);
-        resolve(deleted != null);
-      } catch (e) {
-        reject(e);
-      }
-    });
-  }
+  return new Promise(async (resolve, reject) => {
+    try {
+      let deleted = await Project.findByIdAndDelete(id);
+      resolve(deleted != null);
+    } catch (e) {
+      reject(e);
+    }
+  });
+}
 
 export default {
   Create,
@@ -129,5 +142,5 @@ export default {
   AddCollaborator,
   RemoveCollaborator,
   Update,
-  Delete
+  Delete,
 };
