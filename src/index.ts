@@ -8,21 +8,18 @@ import express, { Request, Response, Application } from "express";
 import bodyParser from "body-parser";
 import connect from "./connect";
 import cors from "cors";
-
 import apicache from 'apicache';
 import routeRegistry from "./routes/routeRegistry";
-
+import swagger from "./swagger/";
 
 const app: Application = express();
 const port = process.env.PORT || 8080;
 
-//app.use(bodyParser.json( {limit: '100mb'}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-
 app.use(cors());
-app.options('*', cors());
 
+app.options('*', cors());
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -53,5 +50,6 @@ if(process.env.NODE_ENV === 'production') {
 }
 
 routeRegistry({app});
+swagger({app});
 
 export default app;
