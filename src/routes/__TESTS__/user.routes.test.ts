@@ -147,9 +147,9 @@ describe("User routes", () => {
     const user: IUser = (<any>res).body;
 
     const res2 = await request(app)
-    .delete("/api/users/" + user._id)
-    .set({ Authorization: "Bearer " + token })
-    .send();
+      .delete("/api/users/" + user._id)
+      .set({ Authorization: "Bearer " + token })
+      .send();
 
     expect(res2.status).toBe(200);
 

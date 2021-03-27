@@ -4,7 +4,7 @@ import Project, {
   IProjectDTO,
   IProjectUpdatesDTO,
 } from "../models/project.model";
-import { IUser } from "../models/user.model";
+import User, { IUser } from "../models/user.model";
 import userController from "./user.controller";
 
 async function Create(project: IProjectDTO): Promise<IProject> {
@@ -126,6 +126,16 @@ async function Delete(id: mongoose.Types.ObjectId): Promise<boolean> {
   return new Promise(async (resolve, reject) => {
     try {
       let deleted = await Project.findByIdAndDelete(id);
+
+      const usersWithProject = await User.find({projects: deleted._id});
+
+      for(let i = 0; i < usersWithProject.length; i++) {
+        const user = usersWithProject[i];
+        const index = user.projects.indexOf(deleted._id);
+        user.projects.splice(index,1);
+        await userController.Update(user,user);
+      }
+
       resolve(deleted != null);
     } catch (e) {
       reject(e);

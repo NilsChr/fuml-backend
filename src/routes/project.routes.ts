@@ -109,7 +109,7 @@ export default ({ app }: TRoutesInput) => {
         if (!requestedProject.ownerId.equals(req.user._id)) {
           return res.status(403).send();
         }
-        const deletedProject = await userController.Delete(
+        const deletedProject = await projectController.Delete(
           requestedProject._id
         );
         logRes(200, deletedProject);

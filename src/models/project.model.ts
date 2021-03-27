@@ -4,7 +4,6 @@ export interface IProject extends Document {
   title: string;
   entityDocuments: mongoose.Types.ObjectId[];
   sequenceDocuments: mongoose.Types.ObjectId[];
-
   created: Number;
   ownerId: mongoose.Types.ObjectId;
   collaborators: mongoose.Types.ObjectId[];
@@ -29,7 +28,6 @@ const ProjectSchema: Schema = new Schema({
   created: { type: Number, default: Date.now() },
   entityDocuments: [{ type: mongoose.Types.ObjectId, ref: "Document" }],
   sequenceDocuments: [{ type: mongoose.Types.ObjectId, ref: "Document" }],
-
   ownerId: { type: mongoose.Types.ObjectId, ref: "Document" },
   collaborators: [{ type: mongoose.Types.ObjectId, ref: "Document" }],
 });
