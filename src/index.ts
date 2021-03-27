@@ -17,6 +17,7 @@ const app: Application = express();
 const port = process.env.PORT || 8080;
 
 //app.use(bodyParser.json( {limit: '100mb'}));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 app.use(cors());

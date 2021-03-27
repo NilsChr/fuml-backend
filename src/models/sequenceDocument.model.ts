@@ -14,7 +14,6 @@ export interface ISequenceDocument extends Document {
   title: string;
   created: Number;
   type: string;
-
   sequenceParts: DocumentSequencePart[];
   sequenceParticipants: string[];
 }
@@ -27,6 +26,12 @@ export interface ISequenceDocumentDTO {
   type: string;
   sequenceParts: DocumentSequencePart[];
   sequenceParticipants: string[];
+}
+
+export interface ISequenceDocumentConstructor {
+  projectId: mongoose.Types.ObjectId;
+  ownerId: mongoose.Types.ObjectId;
+  title: string;
 }
 
 const SequenceDocumentPartSchema: Schema = new Schema({

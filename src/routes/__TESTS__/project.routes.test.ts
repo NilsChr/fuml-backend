@@ -56,6 +56,29 @@ describe("User routes", () => {
     expect(updatedUser.projects.length).toBe(1);
   });
 
+  it("Should fail to create a project without a title", async () => {
+    const token = await testUtilFirebase.loginFirebase();
+    const res = await request(app)
+      .get("/api/account")
+      .set({ Authorization: "Bearer " + token })
+      .send();
+    expect(res.status).toEqual(200);
+    expect(res.body).toHaveProperty("_id");
+
+    const user: IUser = (<any>res).body;
+    const projectBody = {
+      title: "",
+    };
+
+    const postProjectRes = await request(app)
+      .post("/api/projects")
+      .set({ Authorization: "Bearer " + token })
+      .send(projectBody);
+
+    expect(postProjectRes.status).toBe(400);
+  });
+
+
   it("Should connect to app and create a project then delete it", async () => {
     const token = await testUtilFirebase.loginFirebase();
     const res = await request(app)

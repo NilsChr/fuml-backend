@@ -30,6 +30,12 @@ export interface IEntityDocumentDTO {
   entityRelations: DocumentEntityRelation[];
 }
 
+export interface IEntityDocumentConstructor {
+  projectId: mongoose.Types.ObjectId;
+  ownerId: mongoose.Types.ObjectId;
+  title: string;
+}
+
 const DocumentEntityPropertySchema: Schema = new Schema({
   title: { type: String, required: true, unique: false },
   type: { type: String, required: true, unique: false },

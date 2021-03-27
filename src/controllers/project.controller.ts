@@ -7,7 +7,7 @@ import Project, {
 import User, { IUser } from "../models/user.model";
 import userController from "./user.controller";
 
-async function Create(project: IProjectDTO): Promise<IProject> {
+function Create(project: IProjectDTO): Promise<IProject> {
   project.collaborators.push(project.ownerId);
   return Project.create(project)
     .then(async (data: IProject) => {
@@ -22,28 +22,28 @@ async function Create(project: IProjectDTO): Promise<IProject> {
     });
 }
 
-async function Flush(): Promise<number> {
+function Flush(): Promise<number> {
   return new Promise(async (resolve, reject) => {
     const result = await Project.deleteMany({});
     return resolve(result.deletedCount);
   });
 }
 
-async function Get(): Promise<IProject[]> {
+function Get(): Promise<IProject[]> {
   return new Promise(async (resolve, reject) => {
     const projects = await Project.find();
     return resolve(projects);
   });
 }
 
-async function GetById(id: mongoose.Types.ObjectId): Promise<IProject> {
+function GetById(id: mongoose.Types.ObjectId): Promise<IProject> {
   return new Promise(async (resolve, reject) => {
     const project = await Project.findById(id);
     return resolve(project);
   });
 }
 
-async function GetForCollaborator(user: IUser): Promise<IProject[]> {
+function GetForCollaborator(user: IUser): Promise<IProject[]> {
   return new Promise(async (resolve, reject) => {
     try {
       const query = { collaborators: user._id };
@@ -55,7 +55,7 @@ async function GetForCollaborator(user: IUser): Promise<IProject[]> {
   });
 }
 
-async function AddCollaborator(
+function AddCollaborator(
   user: IUser,
   project: IProject
 ): Promise<IProject> {
@@ -75,7 +75,7 @@ async function AddCollaborator(
   });
 }
 
-async function RemoveCollaborator(
+function RemoveCollaborator(
   user: IUser,
   project: IProject
 ): Promise<IProject> {
@@ -96,7 +96,7 @@ async function RemoveCollaborator(
   });
 }
 
-async function Update(
+function Update(
   project: IProject,
   updates: IProjectUpdatesDTO
 ): Promise<IProject> {
@@ -122,7 +122,8 @@ async function Update(
   });
 }
 
-async function Delete(id: mongoose.Types.ObjectId): Promise<boolean> {
+
+function Delete(id: mongoose.Types.ObjectId): Promise<boolean> {
   return new Promise(async (resolve, reject) => {
     try {
       let deleted = await Project.findByIdAndDelete(id);

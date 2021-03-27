@@ -32,11 +32,11 @@ const testUtil = {
       resolve(user);
     });
   },
-  async generateRandomProject(
+  generateRandomProject(
     ownerId: mongoose.Types.ObjectId
   ): Promise<IProject> {
-    return new Promise((resolve) => {
-      const project = projectController.Create({
+    return new Promise(async (resolve) => {
+      const project = await projectController.Create({
         title: this.generateRandomName(),
         entityDocuments: [],
         sequenceDocuments: [],
@@ -64,19 +64,19 @@ const testUtil = {
       resolve(sequenceDocument);
     });
   },
-  async generateRandomEntityDocument(
+  generateRandomEntityDocument(
     ownerId: mongoose.Types.ObjectId,
     projectId: mongoose.Types.ObjectId
   ): Promise<IEntityDocument> {
-    return new Promise((resolve) => {
-      const sequenceDocument = entityDocumentController.Create({
+    return new Promise(async (resolve) => {
+      const sequenceDocument = await entityDocumentController.Create({
         title: this.generateRandomName(),
         projectId: projectId,
         ownerId: ownerId,
-        created: new Date().getTime(),
-        entityProperties: [],
-        entityRelations: [],
-        type: ''
+        //created: new Date().getTime(),
+        //entityProperties: [],
+        //entityRelations: [],
+        //type: ''
       });
       resolve(sequenceDocument);
     });

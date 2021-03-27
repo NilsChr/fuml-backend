@@ -6,7 +6,7 @@ import projectController from "../controllers/project.controller";
 import { IProjectDTO } from "../models/project.model";
 
 export default ({ app }: TRoutesInput) => {
-  let base = "/api/projects";
+  let base = "/api/entitydocuments";
 
   /**
    * Post Projects
@@ -17,10 +17,6 @@ export default ({ app }: TRoutesInput) => {
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
       try {
-        if (!req.body.title || req.body.title == "") {
-          res.status(400).send();
-        }
-
         const projectData: IProjectDTO = {
           title: req.body.title,
           entityDocuments: [],

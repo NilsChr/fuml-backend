@@ -60,6 +60,7 @@ describe("User routes", () => {
     expect(project.collaborators.length).toBe(getCollaboratos.body.length);
   });
 
+  /*
   it("Should connect to app and create a project and add a collaborator", async () => {
     const userToAdd = await testUtil.generateRandomUser();
 
@@ -184,4 +185,6 @@ describe("User routes", () => {
     expect(getCollaboratorRes.status).toBe(403);
 
   });
+
+  */
 });

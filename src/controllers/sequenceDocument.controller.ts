@@ -5,9 +5,7 @@ import SequenceDocument, {
 } from "../models/sequenceDocument.model";
 import projectController from "./project.controller";
 
-async function Create(
-  document: ISequenceDocumentDTO
-): Promise<ISequenceDocument> {
+function Create(document: ISequenceDocumentDTO): Promise<ISequenceDocument> {
   document.type = "SEQUENCE";
   return SequenceDocument.create(document)
     .then(async (data: ISequenceDocument) => {
@@ -21,30 +19,28 @@ async function Create(
     });
 }
 
-async function Flush(): Promise<number> {
+function Flush(): Promise<number> {
   return new Promise(async (resolve, reject) => {
     const result = await SequenceDocument.deleteMany({});
     return resolve(result.deletedCount);
   });
 }
 
-async function Get(): Promise<ISequenceDocument[]> {
+function Get(): Promise<ISequenceDocument[]> {
   return new Promise(async (resolve, reject) => {
     const documents = await SequenceDocument.find();
     return resolve(documents);
   });
 }
 
-async function GetById(
-  id: mongoose.Types.ObjectId
-): Promise<ISequenceDocument> {
+function GetById(id: mongoose.Types.ObjectId): Promise<ISequenceDocument> {
   return new Promise(async (resolve, reject) => {
     const document = await SequenceDocument.findById(id);
     return resolve(document);
   });
 }
 
-async function Update(
+function Update(
   sequenceDocument: ISequenceDocument,
   updates: ISequenceDocumentDTO
 ): Promise<ISequenceDocument> {
@@ -69,7 +65,7 @@ async function Update(
   });
 }
 
-async function Delete(id: mongoose.Types.ObjectId): Promise<boolean> {
+function Delete(id: mongoose.Types.ObjectId): Promise<boolean> {
   return new Promise(async (resolve, reject) => {
     try {
       let deleted = await SequenceDocument.findByIdAndDelete(id);
