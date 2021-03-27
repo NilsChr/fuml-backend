@@ -10,6 +10,5 @@ module.exports = {
     moduleFileExtensions: ["ts", "js", "json", "node"],
     preset: "ts-jest",
     setupFiles: ["dotenv/config"]
-
   };
   

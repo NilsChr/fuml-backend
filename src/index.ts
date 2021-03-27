@@ -16,18 +16,8 @@ import routeRegistry from "./routes/routeRegistry";
 const app: Application = express();
 const port = process.env.PORT || 8080;
 
-app.use(bodyParser.json( {limit: '100mb'}));
+//app.use(bodyParser.json( {limit: '100mb'}));
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-
-//const cache = apicache.middleware;
-//app.use(cache('5 minutes'));
-
-/*
-const fileUpload = require('express-fileupload');
-app.use(fileUpload({
-    createParentPath: true
-}));
-*/
 
 app.use(cors());
 app.options('*', cors());
@@ -61,7 +51,6 @@ if(process.env.NODE_ENV === 'production') {
   connect({ db });
 }
 
-//userRoutes({app});
 routeRegistry({app});
 
 export default app;

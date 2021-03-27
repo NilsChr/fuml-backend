@@ -49,8 +49,25 @@ export default ({ app }: TRoutesInput) => {
       if (!requestedProject.collaborators.includes(req.user._id)) {
         return res.status(403).send();
       }
-      logRes(200, requestedProject.collaborators);
-      return res.status(200).send(requestedProject.collaborators);
+
+      let users = [];
+      for (let i = 0; i < requestedProject.collaborators.length; i++) {
+        const user = await userController.GetById(
+          requestedProject.collaborators[i]
+        );
+        users.push(user);
+      }
+
+      let sanitizedUsers = users.map((u) => {
+        return {
+          _id: u._id,
+          avatarUrl: u.avatarUrl,
+          nickName: u.nickName,
+        };
+      });
+
+      logRes(200, sanitizedUsers);
+      return res.status(200).send(sanitizedUsers);
     }
   );
 

@@ -57,7 +57,7 @@ describe("User routes", () => {
       .get("/api/projects/" + project._id + "/collaborators")
       .set({ Authorization: "Bearer " + token });
 
-    expect(project.collaborators).toStrictEqual(getCollaboratos.body);
+    expect(project.collaborators.length).toBe(getCollaboratos.body.length);
   });
 
   it("Should connect to app and create a project and add a collaborator", async () => {
