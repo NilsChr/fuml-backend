@@ -8,7 +8,7 @@ import app, { server } from "../../index";
 import { IProject } from "../../models/project.model";
 import { IUser } from "../../models/user.model";
 
-describe("User routes", () => {
+describe("Project Collaborators routes", () => {
   beforeAll(async () => {
     const m = await mongoose.connect(global.__MONGO_URI__, {
       useNewUrlParser: true,
@@ -60,7 +60,6 @@ describe("User routes", () => {
     expect(project.collaborators.length).toBe(getCollaboratos.body.length);
   });
 
-  /*
   it("Should connect to app and create a project and add a collaborator", async () => {
     const userToAdd = await testUtil.generateRandomUser();
 
@@ -186,5 +185,4 @@ describe("User routes", () => {
 
   });
 
-  */
 });

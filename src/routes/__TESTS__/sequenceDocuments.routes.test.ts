@@ -1,15 +1,15 @@
 import mongoose from "mongoose";
 import request from "supertest";
-import entityDocumentController from "../../controllers/entityDocument.controller";
 import projectController from "../../controllers/project.controller";
+import sequenceDocumentController from "../../controllers/sequenceDocument.controller";
 import userController from "../../controllers/user.controller";
 import testUtilFirebase from "../../controllers/__TESTS__/testUtilFirebase";
 import app, { server } from "../../index";
-import { IEntityDocumentConstructor } from "../../models/entityDocument.model";
 import { IProject } from "../../models/project.model";
+import { ISequenceDocumentPart, ISequenceDocumentConstructor } from "../../models/sequenceDocument.model";
 import { IUser } from "../../models/user.model";
 
-describe("Entity Document routes", () => {
+describe("Sequence Document routes", () => {
   beforeAll(async () => {
     const m = await mongoose.connect(global.__MONGO_URI__, {
       useNewUrlParser: true,
@@ -30,7 +30,7 @@ describe("Entity Document routes", () => {
     await projectController.Flush();
   });
 
-  it("Should create an entity document", async () => {
+  it("Should create a sequence document", async () => {
     const token = await testUtilFirebase.loginFirebase();
     const res = await request(app)
       .get("/api/account")
@@ -46,26 +46,26 @@ describe("Entity Document routes", () => {
 
     const project: IProject = (<any>postProjectRes).body;
 
-    let constructor: IEntityDocumentConstructor = {
-      title: "entityTitle",
+    let constructor: ISequenceDocumentConstructor = {
+      title: "sequenceTitle",
       projectId: project._id,
       ownerId: user._id,
     };
 
-    const postEntityRes = await request(app)
-      .post("/api/entitydocuments")
+    const postSequenceRes = await request(app)
+      .post("/api/sequencedocuments")
       .set({ Authorization: "Bearer " + token })
       .send(constructor);
 
-    expect(postEntityRes.status).toBe(201);
-    const doc = await entityDocumentController.GetById(postEntityRes.body._id);
+    expect(postSequenceRes.status).toBe(201);
+    const doc = await sequenceDocumentController.GetById(postSequenceRes.body._id);
     expect(doc).not.toBeNull();
 
     const updatedProject = await projectController.GetById(project._id);
-    expect(updatedProject.entityDocuments).toContainEqual(doc._id);
+    expect(updatedProject.sequenceDocuments).toContainEqual(doc._id);
   });
 
-  it("Should fail to create an entity document without a propper projectid", async () => {
+  it("Should fail to create a sequence document without a propper projectid", async () => {
     const token = await testUtilFirebase.loginFirebase();
     const res = await request(app)
       .get("/api/account")
@@ -74,23 +74,23 @@ describe("Entity Document routes", () => {
 
     const user: IUser = (<any>res).body;
 
-    let constructor: IEntityDocumentConstructor = {
-      title: "entityTitle",
+    let constructor: ISequenceDocumentConstructor = {
+      title: "sequenceTitle",
       projectId: mongoose.Types.ObjectId("60527e54cf14623895fa4b6b"),
       ownerId: user._id,
     };
 
     const postEntityRes = await request(app)
-      .post("/api/entitydocuments")
+      .post("/api/sequencedocuments")
       .set({ Authorization: "Bearer " + token })
       .send(constructor);
     expect(postEntityRes.status).toBe(404);
 
-    const doc = await entityDocumentController.GetById(postEntityRes.body._id);
+    const doc = await sequenceDocumentController.GetById(postEntityRes.body._id);
     expect(doc).toBeNull();
   });
 
-  it("Should update entity document by adding an entityRelation ", async () => {
+  it("Should update a sequence document by adding a sequenceParticipant", async () => {
     const token = await testUtilFirebase.loginFirebase();
     const res = await request(app)
       .get("/api/account")
@@ -104,36 +104,34 @@ describe("Entity Document routes", () => {
       .send({ title: "test" });
 
     const project: IProject = (<any>postProjectRes).body;
-    let constructor: IEntityDocumentConstructor = {
-      title: "entityTitle",
+    let constructor: ISequenceDocumentConstructor = {
+      title: "sequenceTitle",
       projectId: project._id,
       ownerId: user._id,
     };
 
-    const postEntityRes = await request(app)
-      .post("/api/entitydocuments")
+    const postRes = await request(app)
+      .post("/api/sequencedocuments")
       .set({ Authorization: "Bearer " + token })
       .send(constructor);
 
-    expect(postEntityRes.status).toBe(201);
+    expect(postRes.status).toBe(201);
 
-    const doc = await entityDocumentController.GetById(postEntityRes.body._id);
+    const doc = await sequenceDocumentController.GetById(postRes.body._id);
     expect(doc).not.toBeNull();
 
-    const relation = {
-      title: "test",
-      type: "test",
-    };
-    doc.entityRelations.push(relation);
+    const participant = 'firebase';
+    doc.sequenceParticipants.push(participant);
 
-    const updateEntityRes = await request(app)
-      .put("/api/entitydocuments/" + doc._id)
+    const updateRes = await request(app)
+      .put("/api/sequencedocuments/" + doc._id)
       .set({ Authorization: "Bearer " + token })
       .send(doc);
-    expect(updateEntityRes.status).toBe(200);
+    expect(updateRes.status).toBe(200);
   });
 
-  it("Should update entity document by adding an entityProperty ", async () => {
+  
+  it("Should update a sequence document by adding an sequencePart ", async () => {
     const token = await testUtilFirebase.loginFirebase();
     const res = await request(app)
       .get("/api/account")
@@ -147,36 +145,40 @@ describe("Entity Document routes", () => {
       .send({ title: "test" });
 
     const project: IProject = (<any>postProjectRes).body;
-    let constructor: IEntityDocumentConstructor = {
-      title: "entityTitle",
+    let constructor: ISequenceDocumentConstructor = {
+      title: "sequenceTitle",
       projectId: project._id,
       ownerId: user._id,
     };
 
-    const postEntityRes = await request(app)
-      .post("/api/entitydocuments")
+    const postRes = await request(app)
+      .post("/api/sequencedocuments")
       .set({ Authorization: "Bearer " + token })
       .send(constructor);
 
-    expect(postEntityRes.status).toBe(201);
+    expect(postRes.status).toBe(201);
 
-    const doc = await entityDocumentController.GetById(postEntityRes.body._id);
+    const doc = await sequenceDocumentController.GetById(postRes.body._id);
     expect(doc).not.toBeNull();
 
-    const relation = {
+    const part: ISequenceDocumentPart = {
       title: "2234",
-      type: "test",
+      block: false,
+      code: '',
+      editorOpen: false,
+      visible: false
     };
-    doc.entityProperties.push(relation);
+    doc.sequenceParts.push(part);
 
-    const updateEntityRes = await request(app)
-      .put("/api/entitydocuments/" + doc._id)
+    const updateRes = await request(app)
+      .put("/api/sequencedocuments/" + doc._id)
       .set({ Authorization: "Bearer " + token })
       .send(doc);
-    expect(updateEntityRes.status).toBe(200);
+    expect(updateRes.status).toBe(200);
   });
 
-  it("Should delete entity document ", async () => {
+
+  it("Should delete sequence document ", async () => {
     const token = await testUtilFirebase.loginFirebase();
     const res = await request(app)
       .get("/api/account")
@@ -190,30 +192,30 @@ describe("Entity Document routes", () => {
       .send({ title: "test" });
 
     const project: IProject = (<any>postProjectRes).body;
-    let constructor: IEntityDocumentConstructor = {
-      title: "entityTitle",
+    let constructor: ISequenceDocumentConstructor = {
+      title: "sequenceTitle",
       projectId: project._id,
       ownerId: user._id,
     };
 
-    const postEntityRes = await request(app)
-      .post("/api/entitydocuments")
+    const postRes = await request(app)
+      .post("/api/sequencedocuments")
       .set({ Authorization: "Bearer " + token })
       .send(constructor);
 
-    expect(postEntityRes.status).toBe(201);
+    expect(postRes.status).toBe(201);
 
-    const doc = await entityDocumentController.GetById(postEntityRes.body._id);
+    const doc = await sequenceDocumentController.GetById(postRes.body._id);
     expect(doc).not.toBeNull();
 
-    const delEntityRes = await request(app)
-      .delete("/api/entitydocuments/" + doc._id)
+    const delRes = await request(app)
+      .delete("/api/sequencedocuments/" + doc._id)
       .set({ Authorization: "Bearer " + token });
 
-    expect(delEntityRes.status).toBe(200);
+    expect(delRes.status).toBe(200);
 
-    const docAfter = await entityDocumentController.GetById(
-      postEntityRes.body._id
+    const docAfter = await sequenceDocumentController.GetById(
+      postRes.body._id
     );
     expect(docAfter).toBeNull();
   });

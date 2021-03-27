@@ -1,6 +1,14 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-class DocumentSequencePart {
+export interface ISequenceDocumentPart {
+  title: string;
+  editorOpen: boolean;
+  visible: boolean;
+  block: boolean;
+  code: string;
+}
+
+class DocumentSequencePart implements ISequenceDocumentPart {
   title: string;
   editorOpen: boolean;
   visible: boolean;

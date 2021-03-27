@@ -1,15 +1,24 @@
 import mongoose, { Document } from "mongoose";
 import SequenceDocument, {
   ISequenceDocument,
+  ISequenceDocumentConstructor,
   ISequenceDocumentDTO,
 } from "../models/sequenceDocument.model";
 import projectController from "./project.controller";
 
-function Create(document: ISequenceDocumentDTO): Promise<ISequenceDocument> {
-  document.type = "SEQUENCE";
-  return SequenceDocument.create(document)
+function Create(document: ISequenceDocumentConstructor): Promise<ISequenceDocument> {
+  const doc: ISequenceDocumentDTO = {
+    title: document.title,
+    ownerId: document.ownerId,
+    projectId: document.projectId,
+    type: "SEQUENCE",
+    created: new Date().getTime(),
+    sequenceParticipants: [],
+    sequenceParts: [],
+  };
+  return SequenceDocument.create(doc)
     .then(async (data: ISequenceDocument) => {
-      const project = await projectController.GetById(document.projectId);
+      const project = await projectController.GetById(doc.projectId);
       project.sequenceDocuments.push(data._id);
       await projectController.Update(project, project);
       return data;

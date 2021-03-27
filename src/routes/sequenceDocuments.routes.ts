@@ -7,12 +7,14 @@ import entityDocumentModel, {
   IEntityDocumentConstructor,
 } from "../models/entityDocument.model";
 import entityDocumentController from "../controllers/entityDocument.controller";
+import { ISequenceDocumentConstructor } from "../models/sequenceDocument.model";
+import sequenceDocumentController from "../controllers/sequenceDocument.controller";
 
 export default ({ app }: TRoutesInput) => {
-  let base = "/api/entitydocuments";
+  let base = "/api/sequencedocuments";
 
   /**
-   * Post EntityDocuments
+   * Post SequenceDocuments
    */
   app.post(
     base,
@@ -24,12 +26,12 @@ export default ({ app }: TRoutesInput) => {
         if (!project) {
           return res.status(404).send();
         }
-        const projectData: IEntityDocumentConstructor = {
+        const projectData: ISequenceDocumentConstructor = {
           title: req.body.title,
           ownerId: req.body.ownerId,
           projectId: req.body.projectId,
         };
-        const newDoc = await entityDocumentController.Create(projectData);
+        const newDoc = await sequenceDocumentController.Create(projectData);
         res.status(201).send(newDoc);
       } catch (e) {
         console.log(e);
@@ -39,14 +41,14 @@ export default ({ app }: TRoutesInput) => {
   );
 
   /**
-   * Get Entity Document
+   * Get Sequence Document
    */
   app.get(
     base + "/:id",
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
-      const requestedDocument = await entityDocumentController.GetById(
+      const requestedDocument = await sequenceDocumentController.GetById(
         req.params.id
       );
       if (!requestedDocument) {
@@ -65,7 +67,7 @@ export default ({ app }: TRoutesInput) => {
   );
 
   /**
-   * Update Entity Document
+   * Update Sequence Document
    */
   app.put(
     base + "/:id",
@@ -73,7 +75,7 @@ export default ({ app }: TRoutesInput) => {
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
       try {
-        const requestedDocument = await entityDocumentController.GetById(
+        const requestedDocument = await sequenceDocumentController.GetById(
           req.params.id
         );
         if (!requestedDocument) {
@@ -88,7 +90,7 @@ export default ({ app }: TRoutesInput) => {
         }
         const updates = req.body;
 
-        const updatedDocument = await entityDocumentController.Update(
+        const updatedDocument = await sequenceDocumentController.Update(
           requestedDocument,
           updates
         );
@@ -110,7 +112,7 @@ export default ({ app }: TRoutesInput) => {
     async (req: any, res: any, next: any) => {
       console.log("DELETE: " + base);
       try {
-        const requestedDocument = await entityDocumentController.GetById(
+        const requestedDocument = await sequenceDocumentController.GetById(
           req.params.id
         );
         if (!requestedDocument) {
@@ -123,7 +125,7 @@ export default ({ app }: TRoutesInput) => {
         if (!project.collaborators.includes(req.user._id)) {
           return res.status(403).send();
         }
-        const deletedDocument = await entityDocumentController.Delete(
+        const deletedDocument = await sequenceDocumentController.Delete(
           requestedDocument._id
         );
         logRes(200, deletedDocument);

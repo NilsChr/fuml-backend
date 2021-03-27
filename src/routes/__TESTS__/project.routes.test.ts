@@ -7,7 +7,7 @@ import app, { server } from "../../index";
 import { IProject } from "../../models/project.model";
 import { IUser } from "../../models/user.model";
 
-describe("User routes", () => {
+describe("Project routes", () => {
   beforeAll(async () => {
     const m = await mongoose.connect(global.__MONGO_URI__, {
       useNewUrlParser: true,

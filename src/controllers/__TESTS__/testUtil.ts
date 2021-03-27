@@ -55,11 +55,7 @@ const testUtil = {
       const sequenceDocument = sequenceDocumentController.Create({
         title: this.generateRandomName(),
         projectId: projectId,
-        ownerId: ownerId,
-        created: new Date().getTime(),
-        sequenceParts: [],
-        sequenceParticipants: [],
-        type: ''
+        ownerId: ownerId
       });
       resolve(sequenceDocument);
     });
@@ -73,10 +69,6 @@ const testUtil = {
         title: this.generateRandomName(),
         projectId: projectId,
         ownerId: ownerId,
-        //created: new Date().getTime(),
-        //entityProperties: [],
-        //entityRelations: [],
-        //type: ''
       });
       resolve(sequenceDocument);
     });
