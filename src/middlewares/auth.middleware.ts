@@ -20,7 +20,7 @@ const getAuthToken = (req: any, res: any, next: any) => {
 
 const checkIfAuthenticated = (req: any, res: any, next: any) => {
   getAuthToken(req, res, async () => {
-    console.log("middleware: checkIfAuthenticated");
+    //console.log("middleware: checkIfAuthenticated");
     try {
       const test = process.env.NODE_ENV === "development" ? "_test" : "";
       let userInfo: any = {
@@ -34,11 +34,11 @@ const checkIfAuthenticated = (req: any, res: any, next: any) => {
 
       try {
         req.user = await UserController.GetByEmail(userInfo.email);
-        console.log(req.user);
+        //console.log(req.user);
         if (!req.user) throw "no user found";
-        console.log("Found user");
+        //console.log("Found user");
       } catch (e) {
-        console.log("Creating new user");
+        //console.log("Creating new user");
         req.user = await UserController.Create({
           nickName: "",
           avatarUrl: userInfo.picture,
@@ -50,12 +50,12 @@ const checkIfAuthenticated = (req: any, res: any, next: any) => {
         });
       }
 
-      console.log("user found: ", req.user);
+      //console.log("user found: ", req.user);
       return next();
     } catch (e) {
-      //console.log(e);
+      console.log(e);
       return res
-        .status(401)
+        .status(403)
         .send({ error: "You are not authorized to make this request" });
     }
   });

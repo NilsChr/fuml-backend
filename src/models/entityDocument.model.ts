@@ -1,12 +1,19 @@
 import mongoose, { Schema, Document } from "mongoose";
 
+export class DocumentEntity {
+  title: string;
+  created: number;
+  entities: DocumentEntityProperty[];
+  relations: DocumentEntityRelation[];
+}
+
 class DocumentEntityProperty {
   title: string;
   type: string;
 }
 
 class DocumentEntityRelation {
-  title: string;
+  entity: string;
   type: string;
 }
 
@@ -16,8 +23,8 @@ export interface IEntityDocument extends Document {
   title: string;
   created: Number;
   type: string;
-  entityProperties: DocumentEntityProperty[];
-  entityRelations: DocumentEntityRelation[];
+  entities: DocumentEntity[];
+  //relations: DocumentEntityRelation[];
 }
 
 export interface IEntityDocumentDTO {
@@ -26,8 +33,8 @@ export interface IEntityDocumentDTO {
   title: string;
   created: Number;
   type: string;
-  entityProperties: DocumentEntityProperty[];
-  entityRelations: DocumentEntityRelation[];
+  entities: DocumentEntity[];
+  //relations: DocumentEntityRelation[];
 }
 
 export interface IEntityDocumentConstructor {
@@ -35,7 +42,7 @@ export interface IEntityDocumentConstructor {
   ownerId: mongoose.Types.ObjectId;
   title: string;
 }
-
+/*
 const DocumentEntityPropertySchema: Schema = new Schema({
   title: { type: String, required: true, unique: false },
   type: { type: String, required: true, unique: false },
@@ -43,18 +50,36 @@ const DocumentEntityPropertySchema: Schema = new Schema({
 
 const DocumentEntityRelationSchema: Schema = new Schema({
   title: { type: String, required: true, unique: false },
+  entity: { type: String, required: true, unique: false },
+});
+*/
+
+const DocumentEntitySchema: Schema = new Schema({
+  title: { type: String, required: true, unique: false },
   type: { type: String, required: true, unique: false },
+  properties: [
+    {
+      type: { type: String, required: true, unique: false },
+      title: { type: String, required: true, unique: false },
+    },
+  ],
+  relations: [
+    {
+      type: { type: String, required: true, unique: false },
+      entity: { type: String, required: true, unique: false },
+    },
+  ],
+  //relations: [DocumentEntityRelationSchema]
 });
 
 const EntityDocumentSchema: Schema = new Schema({
-  projectId: [{ type: mongoose.Types.ObjectId, ref: "Project" }],
-  ownerId: [{ type: mongoose.Types.ObjectId, ref: "User" }],
+  projectId: { type: mongoose.Types.ObjectId, ref: "Project" },
+  ownerId: { type: mongoose.Types.ObjectId, ref: "User" },
   title: { type: String, required: true, unique: false },
   created: { type: Number, default: Date.now() },
   type: { type: String, default: "ENTITY" },
-
-  entityProperties: [DocumentEntityPropertySchema],
-  entityRelations: [DocumentEntityRelationSchema],
+  entities: [DocumentEntitySchema],
+  //relations: [DocumentEntityRelationSchema],
 });
 
 export default mongoose.model<IEntityDocument>(

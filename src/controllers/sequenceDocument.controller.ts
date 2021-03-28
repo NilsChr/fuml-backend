@@ -13,8 +13,8 @@ function Create(document: ISequenceDocumentConstructor): Promise<ISequenceDocume
     projectId: document.projectId,
     type: "SEQUENCE",
     created: new Date().getTime(),
-    sequenceParticipants: [],
-    sequenceParts: [],
+    participants: [],
+    parts: [],
   };
   return SequenceDocument.create(doc)
     .then(async (data: ISequenceDocument) => {
@@ -53,12 +53,14 @@ function Update(
   sequenceDocument: ISequenceDocument,
   updates: ISequenceDocumentDTO
 ): Promise<ISequenceDocument> {
+  console.log('UPDATE');
   return new Promise(async (resolve, reject) => {
     try {
+      console.log(updates);
       const sanitizedUpdates = {
         title: updates.title,
-        sequenceParts: updates.sequenceParts,
-        sequenceParticipants: updates.sequenceParticipants,
+        parts: updates.parts,
+        participants: updates.participants,
       };
 
       const updatedProject = await SequenceDocument.findByIdAndUpdate(

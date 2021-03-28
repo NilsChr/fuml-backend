@@ -16,14 +16,18 @@ class DocumentSequencePart implements ISequenceDocumentPart {
   code: string;
 }
 
+class DocumentSequenceParticipant {
+  title: string;
+}
+
 export interface ISequenceDocument extends Document {
   projectId: mongoose.Types.ObjectId;
   ownerId: mongoose.Types.ObjectId;
   title: string;
   created: Number;
   type: string;
-  sequenceParts: DocumentSequencePart[];
-  sequenceParticipants: string[];
+  parts: DocumentSequencePart[];
+  participants: DocumentSequenceParticipant[];
 }
 
 export interface ISequenceDocumentDTO {
@@ -32,8 +36,8 @@ export interface ISequenceDocumentDTO {
   title: string;
   created: Number;
   type: string;
-  sequenceParts: DocumentSequencePart[];
-  sequenceParticipants: string[];
+  parts: DocumentSequencePart[];
+  participants: DocumentSequenceParticipant[];
 }
 
 export interface ISequenceDocumentConstructor {
@@ -48,17 +52,22 @@ const SequenceDocumentPartSchema: Schema = new Schema({
   visible: { type: Boolean, default: true },
   block: { type: Boolean, default: true },
   code: { type: String, default: "" },
+})
+
+
+const SequenceDocumentParticpantSchema: Schema = new Schema({
+  title: { type: String, required: true },
 });
 
 const SequenceDocumentSchema: Schema = new Schema({
-  projectId: [{ type: mongoose.Types.ObjectId, ref: "Project" }],
-  ownerId: [{ type: mongoose.Types.ObjectId, ref: "User" }],
+  projectId: { type: mongoose.Types.ObjectId, ref: "Project" },
+  ownerId: { type: mongoose.Types.ObjectId, ref: "User" },
   title: { type: String, required: true, unique: false },
   created: { type: Number, default: Date.now() },
   type: { type: String, default: "ENTITY" },
 
-  sequenceParts: [SequenceDocumentPartSchema],
-  sequenceParticipants: [{ type: String, required: false }],
+  parts: [SequenceDocumentPartSchema],
+  participants: [{ type: SequenceDocumentParticpantSchema, required: false }],
 });
 
 export default mongoose.model<ISequenceDocument>(

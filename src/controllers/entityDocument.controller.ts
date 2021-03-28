@@ -15,8 +15,8 @@ function Create(
     projectId: document.projectId,
     type: "ENTITY",
     created: new Date().getTime(),
-    entityProperties: [],
-    entityRelations: [],
+    entities: [],
+//    relations: [],
   };
   return EntityDocument.create(doc)
     .then(async (data: IEntityDocument) => {
@@ -56,10 +56,13 @@ function Update(
 ): Promise<IEntityDocument> {
   return new Promise(async (resolve, reject) => {
     try {
+      console.log('UPDATING');
+      console.log(JSON.stringify(entityDocument));
+      console.log(JSON.stringify(updates));
       const sanitizedUpdates = {
         title: updates.title,
-        entityProperties: updates.entityProperties,
-        entityRelations: updates.entityRelations,
+        entities: updates.entities,
+        //relations: updates.relations,
       };
 
       const updatedProject = await EntityDocument.findByIdAndUpdate(

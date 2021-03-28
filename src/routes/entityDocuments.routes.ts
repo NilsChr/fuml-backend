@@ -26,7 +26,7 @@ export default ({ app }: TRoutesInput) => {
         }
         const projectData: IEntityDocumentConstructor = {
           title: req.body.title,
-          ownerId: req.body.ownerId,
+          ownerId: req.user._id,//req.body.ownerId,
           projectId: req.body.projectId,
         };
         const newDoc = await entityDocumentController.Create(projectData);

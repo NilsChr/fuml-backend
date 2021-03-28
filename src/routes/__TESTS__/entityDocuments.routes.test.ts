@@ -5,7 +5,7 @@ import projectController from "../../controllers/project.controller";
 import userController from "../../controllers/user.controller";
 import testUtilFirebase from "../../controllers/__TESTS__/testUtilFirebase";
 import app, { server } from "../../index";
-import { IEntityDocumentConstructor } from "../../models/entityDocument.model";
+import { IEntityDocumentConstructor,  DocumentEntity } from "../../models/entityDocument.model";
 import { IProject } from "../../models/project.model";
 import { IUser } from "../../models/user.model";
 
@@ -120,11 +120,13 @@ describe("Entity Document routes", () => {
     const doc = await entityDocumentController.GetById(postEntityRes.body._id);
     expect(doc).not.toBeNull();
 
-    const relation = {
+    const entity: DocumentEntity = {
       title: "test",
-      type: "test",
+      created: new Date().getTime(),
+      entities: [],
+      relations: []
     };
-    doc.entityRelations.push(relation);
+    doc.entities.push(entity);
 
     const updateEntityRes = await request(app)
       .put("/api/entitydocuments/" + doc._id)
@@ -163,11 +165,13 @@ describe("Entity Document routes", () => {
     const doc = await entityDocumentController.GetById(postEntityRes.body._id);
     expect(doc).not.toBeNull();
 
-    const relation = {
-      title: "2234",
-      type: "test",
+    const entity: DocumentEntity = {
+      title: "test",
+      created: new Date().getTime(),
+      entities: [],
+      relations: []
     };
-    doc.entityProperties.push(relation);
+    doc.entities.push(entity);
 
     const updateEntityRes = await request(app)
       .put("/api/entitydocuments/" + doc._id)

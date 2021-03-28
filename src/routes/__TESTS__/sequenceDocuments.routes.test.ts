@@ -120,8 +120,8 @@ describe("Sequence Document routes", () => {
     const doc = await sequenceDocumentController.GetById(postRes.body._id);
     expect(doc).not.toBeNull();
 
-    const participant = 'firebase';
-    doc.sequenceParticipants.push(participant);
+    const participant = {title:'firebase'};
+    doc.participants.push(participant);
 
     const updateRes = await request(app)
       .put("/api/sequencedocuments/" + doc._id)
@@ -168,7 +168,7 @@ describe("Sequence Document routes", () => {
       editorOpen: false,
       visible: false
     };
-    doc.sequenceParts.push(part);
+    doc.parts.push(part);
 
     const updateRes = await request(app)
       .put("/api/sequencedocuments/" + doc._id)

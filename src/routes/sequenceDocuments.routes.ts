@@ -28,7 +28,7 @@ export default ({ app }: TRoutesInput) => {
         }
         const projectData: ISequenceDocumentConstructor = {
           title: req.body.title,
-          ownerId: req.body.ownerId,
+          ownerId: req.user._id,
           projectId: req.body.projectId,
         };
         const newDoc = await sequenceDocumentController.Create(projectData);
@@ -97,6 +97,7 @@ export default ({ app }: TRoutesInput) => {
         logRes(200, updatedDocument);
         return res.status(200).send(updatedDocument);
       } catch (e) {
+          console.log(e);
         res.status(500).send();
       }
     }

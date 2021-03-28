@@ -4,6 +4,8 @@ import { logReq, logRes } from "../middlewares/log.middleware";
 import userController from "../controllers/user.controller";
 import projectController from "../controllers/project.controller";
 import { IProjectDTO } from "../models/project.model";
+import sequenceDocumentController from "../controllers/sequenceDocument.controller";
+import entityDocumentController from "../controllers/entityDocument.controller";
 
 export default ({ app }: TRoutesInput) => {
   let base = "/api/projects";
@@ -66,6 +68,39 @@ export default ({ app }: TRoutesInput) => {
       }
       logRes(200, requestedProject);
       return res.status(200).send(requestedProject);
+    }
+  );
+
+  /**
+   * Get Project documents
+   */
+   app.get(
+    base + "/:id/documents",
+    logReq,
+    checkIfAuthenticated,
+    async (req: any, res: any, next: any) => {
+      const requestedProject = await projectController.GetById(req.params.id);
+      if (!requestedProject.collaborators.includes(req.user._id)) {
+        return res.status(403).send();
+      }
+
+      let documents = [];
+      for(let i = 0; i < requestedProject.sequenceDocuments.length; i++) {
+        const docId = requestedProject.sequenceDocuments[i];
+        const doc = await sequenceDocumentController.GetById(docId);
+        if(!doc) continue;
+        documents.push(doc);
+      }
+
+      for(let i = 0; i < requestedProject.entityDocuments.length; i++) {
+        const docId = requestedProject.entityDocuments[i];
+        const doc = await entityDocumentController.GetById(docId);
+        if(!doc) continue;
+        documents.push(doc);
+      }
+
+      logRes(200, documents);
+      return res.status(200).send(documents);
     }
   );
 
