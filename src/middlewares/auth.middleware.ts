@@ -27,18 +27,22 @@ const checkIfAuthenticated = (req: any, res: any, next: any) => {
         email: null,
         uid: null,
       };
-      
+      console.log('YO');
       const { authToken } = req;
       userInfo = await firebase.auth().verifyIdToken(authToken);
       req.googleId = userInfo.uid;
       req.userName = userInfo.userName;
+      console.log('YO2');
 
       try {
+        console.log('GET BY EMAIL');
+
         req.user = await UserController.GetByEmail(userInfo.email);
+        console.log(req.user);
         if (!req.user) throw "no user found";
         console.log("Found user");
       } catch (e) {
-        //console.log("Creating new user");
+        console.log("Creating new user");
         req.user = await UserController.Create({
           nickName: "",
           avatarUrl: userInfo.picture,
@@ -50,7 +54,7 @@ const checkIfAuthenticated = (req: any, res: any, next: any) => {
         });
       }
 
-      //console.log("user found: ", req.user);
+      console.log("user found: ", req.user);
       return next();
     } catch (e) {
       //console.log(e);

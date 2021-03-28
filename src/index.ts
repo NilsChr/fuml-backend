@@ -47,7 +47,7 @@ export const server = app.listen(port, () =>
   console.log(`Application started successfully on port ${port}.`)
 );
 
-if(process.env.NODE_ENV === 'production') {
+if(process.env.NODE_ENV !== 'test') {
   const db = process.env.DB_URI;
   connect({ db });
 }

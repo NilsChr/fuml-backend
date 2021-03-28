@@ -5,8 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "export NODE_ENV='development' && nodemon",
-    "test": "export NODE_ENV='development' && jest --runInBand --silent",
-    "testSingle": "export NODE_ENV='development' && jest --runInBand",
+    "test": "export NODE_ENV='test' && jest --runInBand --silent",
+    "testSingle": "export NODE_ENV='test' && jest --runInBand",
 
     "start": "node ./dist/index.js",
     "build": "tsc",

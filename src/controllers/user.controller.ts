@@ -51,10 +51,14 @@ function GetById(id: mongoose.Types.ObjectId): Promise<IUser> {
 function GetByEmail(email: string): Promise<IUser> {
   return new Promise(async (resolve, reject) => {
     try {
-      let query = { email: email };
-      let user = await User.findOne(query);
+      const query = { email: email };
+      console.log('Query', query)
+      const user = await User.findOne(query);
+      console.log('GOT');
+      console.log(user);
       resolve(user);
     } catch (e) {
+      console.log(e);
       reject(e);
     }
   });
