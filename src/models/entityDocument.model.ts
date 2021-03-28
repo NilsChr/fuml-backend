@@ -24,7 +24,6 @@ export interface IEntityDocument extends Document {
   created: Number;
   type: string;
   entities: DocumentEntity[];
-  //relations: DocumentEntityRelation[];
 }
 
 export interface IEntityDocumentDTO {
@@ -34,7 +33,6 @@ export interface IEntityDocumentDTO {
   created: Number;
   type: string;
   entities: DocumentEntity[];
-  //relations: DocumentEntityRelation[];
 }
 
 export interface IEntityDocumentConstructor {
@@ -42,17 +40,6 @@ export interface IEntityDocumentConstructor {
   ownerId: mongoose.Types.ObjectId;
   title: string;
 }
-/*
-const DocumentEntityPropertySchema: Schema = new Schema({
-  title: { type: String, required: true, unique: false },
-  type: { type: String, required: true, unique: false },
-});
-
-const DocumentEntityRelationSchema: Schema = new Schema({
-  title: { type: String, required: true, unique: false },
-  entity: { type: String, required: true, unique: false },
-});
-*/
 
 const DocumentEntitySchema: Schema = new Schema({
   title: { type: String, required: true, unique: false },
@@ -69,7 +56,6 @@ const DocumentEntitySchema: Schema = new Schema({
       entity: { type: String, required: true, unique: false },
     },
   ],
-  //relations: [DocumentEntityRelationSchema]
 });
 
 const EntityDocumentSchema: Schema = new Schema({
@@ -79,7 +65,6 @@ const EntityDocumentSchema: Schema = new Schema({
   created: { type: Number, default: Date.now() },
   type: { type: String, default: "ENTITY" },
   entities: [DocumentEntitySchema],
-  //relations: [DocumentEntityRelationSchema],
 });
 
 export default mongoose.model<IEntityDocument>(
