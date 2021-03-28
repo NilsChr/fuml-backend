@@ -27,16 +27,12 @@ const checkIfAuthenticated = (req: any, res: any, next: any) => {
         email: null,
         uid: null,
       };
-      console.log('YO');
       const { authToken } = req;
       userInfo = await firebase.auth().verifyIdToken(authToken);
       req.googleId = userInfo.uid;
       req.userName = userInfo.userName;
-      console.log('YO2');
 
       try {
-        console.log('GET BY EMAIL');
-
         req.user = await UserController.GetByEmail(userInfo.email);
         console.log(req.user);
         if (!req.user) throw "no user found";

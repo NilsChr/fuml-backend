@@ -42,16 +42,13 @@ export default ({ app }: TRoutesInput) => {
    * Get Projects
    */
   app.get(
-    base + "/:id",
+    base,
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
-      const requestedProject = await projectController.GetById(req.params.id);
-      if (!requestedProject.collaborators.includes(req.user._id)) {
-        return res.status(403).send();
-      }
-      logRes(200, requestedProject);
-      return res.status(200).send(requestedProject);
+      const projects = await projectController.GetForCollaborator(req.user._id);
+      logRes(200, projects);
+      return res.status(200).send(projects);
     }
   );
 
