@@ -4,6 +4,7 @@ import projectCollaboratorRoutes from "./project.collaborators.routes";
 import userRoutes from "./user.routes";
 import entityDocumentsRoutes from "./entityDocuments.routes";
 import sequenceDocumentsRoutes from "./sequenceDocuments.routes";
+import servicesRoutes from "./services.routes";
 
 export default ({ app }: TRoutesInput) => {
     userRoutes({app});
@@ -11,4 +12,5 @@ export default ({ app }: TRoutesInput) => {
     projectCollaboratorRoutes({app});
     entityDocumentsRoutes({app});
     sequenceDocumentsRoutes({app});
+    servicesRoutes({app});
 }

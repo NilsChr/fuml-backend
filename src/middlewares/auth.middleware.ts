@@ -40,7 +40,7 @@ const checkIfAuthenticated = (req: any, res: any, next: any) => {
       } catch (e) {
         //console.log("Creating new user");
         req.user = await UserController.Create({
-          nickName: "",
+          nickName: userInfo.name,
           avatarUrl: userInfo.picture,
           email: userInfo.email,
           googleId: userInfo.uid,

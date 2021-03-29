@@ -52,11 +52,28 @@ function GetByEmail(email: string): Promise<IUser> {
   return new Promise(async (resolve, reject) => {
     try {
       const query = { email: email };
-      console.log('Query', query)
       const user = await User.findOne(query);
-      console.log('GOT');
-      console.log(user);
       resolve(user);
+    } catch (e) {
+      console.log(e);
+      reject(e);
+    }
+  });
+}
+
+function GetByNickname(nickname: string): Promise<any[]> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const query = { nickName: {$regex : new RegExp(".*" + nickname + ".*", "i")} };
+      const users = await User.find(query).limit(5);
+      const usersOut = users.map(u => {
+        return {
+          _id: u._id,
+          nickName: u.nickName,
+          avatarUrl: u.avatarUrl
+        }
+      })
+      resolve(usersOut);
     } catch (e) {
       console.log(e);
       reject(e);
@@ -111,6 +128,7 @@ export default {
   Get,
   GetByGoogleId,
   GetByEmail,
+  GetByNickname,
   Update,
   GetById,
   GetRandom,
