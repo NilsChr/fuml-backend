@@ -91,6 +91,10 @@ function Update(user: IUser, updates: IUserUpdatesDTO): Promise<IUser> {
         projects: updates.projects,
       };
 
+      if(!sanitizedUpdates.nickName) {
+        delete sanitizedUpdates.nickName;
+      }
+
       const updatedUser = await User.findByIdAndUpdate(
         user._id,
         sanitizedUpdates,

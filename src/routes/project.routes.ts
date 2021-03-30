@@ -114,6 +114,11 @@ export default ({ app }: TRoutesInput) => {
     async (req: any, res: any, next: any) => {
       try {
         const requestedProject = await projectController.GetById(req.params.id);
+
+        if(!requestedProject) {
+          return res.status(404).send();
+        }
+
         if (!requestedProject.collaborators.includes(req.user._id)) {
           return res.status(403).send();
         }
@@ -142,6 +147,11 @@ export default ({ app }: TRoutesInput) => {
       console.log("DELETE: " + base);
       try {
         const requestedProject = await projectController.GetById(req.params.id);
+        
+        if(!requestedProject) {
+          return res.status(404).send();
+        }
+
         if (!requestedProject.ownerId.equals(req.user._id)) {
           return res.status(403).send();
         }

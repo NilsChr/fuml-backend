@@ -5,6 +5,8 @@ import Project, {
   IProjectUpdatesDTO,
 } from "../models/project.model";
 import User, { IUser } from "../models/user.model";
+import entityDocumentController from "./entityDocument.controller";
+import sequenceDocumentController from "./sequenceDocument.controller";
 import userController from "./user.controller";
 
 function Create(project: IProjectDTO): Promise<IProject> {
@@ -55,10 +57,7 @@ function GetForCollaborator(user: IUser): Promise<IProject[]> {
   });
 }
 
-function AddCollaborator(
-  user: IUser,
-  project: IProject
-): Promise<IProject> {
+function AddCollaborator(user: IUser, project: IProject): Promise<IProject> {
   return new Promise(async (resolve, reject) => {
     try {
       // Allready a collaborator
@@ -67,7 +66,7 @@ function AddCollaborator(
       }
       project.collaborators.push(user._id);
       user.projects.push(project._id);
-      await userController.Update(user,user);
+      await userController.Update(user, user);
       resolve(await Update(project, project));
     } catch (e) {
       reject(e);
@@ -75,18 +74,15 @@ function AddCollaborator(
   });
 }
 
-function RemoveCollaborator(
-  user: IUser,
-  project: IProject
-): Promise<IProject> {
+function RemoveCollaborator(user: IUser, project: IProject): Promise<IProject> {
   return new Promise(async (resolve, reject) => {
     try {
       const index = project.collaborators.indexOf(user._id);
       project.collaborators.splice(index, 1);
 
       const projectIndex = user.projects.indexOf(project._id);
-      user.projects.splice(projectIndex,1);
-      await userController.Update(user,user);
+      user.projects.splice(projectIndex, 1);
+      await userController.Update(user, user);
 
       const updated = await Update(project, project);
       resolve(updated);
@@ -122,20 +118,29 @@ function Update(
   });
 }
 
-
 function Delete(id: mongoose.Types.ObjectId): Promise<boolean> {
   return new Promise(async (resolve, reject) => {
     try {
-      let deleted = await Project.findByIdAndDelete(id);
-
-      const usersWithProject = await User.find({projects: deleted._id});
-
-      for(let i = 0; i < usersWithProject.length; i++) {
-        const user = usersWithProject[i];
-        const index = user.projects.indexOf(deleted._id);
-        user.projects.splice(index,1);
-        await userController.Update(user,user);
+      const project = await Project.findById(id);
+      for (let i = 0; i < project.sequenceDocuments.length; i++) {
+        const sequenceDocument = project.sequenceDocuments[i];
+        await sequenceDocumentController.Delete(sequenceDocument);
       }
+
+      for (let i = 0; i < project.entityDocuments.length; i++) {
+        const entityDocument = project.entityDocuments[i];
+        await entityDocumentController.Delete(entityDocument);
+      }
+      const usersWithProject = await User.find({ projects: project._id });
+
+      for (let i = 0; i < usersWithProject.length; i++) {
+        const user = usersWithProject[i];
+        const index = user.projects.indexOf(project._id);
+        user.projects.splice(index, 1);
+        await userController.Update(user, user);
+      }
+
+      let deleted = await Project.findByIdAndDelete(id);
 
       resolve(deleted != null);
     } catch (e) {
