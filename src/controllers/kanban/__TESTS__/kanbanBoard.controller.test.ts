@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
-import projectController from "../project.controller";
-import userController from "../user.controller";
-import kanbanBoardController from "./kanbanBoard.controller";
-import testUtil from "../__TESTS__/testUtil";
-import { IKanbanBoardContructor } from "../../models/kanban/kanbanBoard.model";
-import { IKanbanBoardCardConstructor } from "../../models/kanban/kanbanBoardCard.model";
-import kanbanBoardCardController from "./kanbanBoardCard.controller";
+import projectController from "../../project.controller";
+import userController from "../../user.controller";
+import kanbanBoardController from "../kanbanBoard.controller";
+import testUtil from "../../__TESTS__/testUtil";
+import { IKanbanBoardContructor } from "../../../models/kanban/kanbanBoard.model";
+import { IKanbanBoardCardConstructor } from "../../../models/kanban/kanbanBoardCard.model";
+import kanbanBoardCardController from "../kanbanBoardCard.controller";
 describe("Entity Document Controller", () => {
   beforeAll(async () => {
     const m = await mongoose.connect(global.__MONGO_URI__, {
@@ -44,6 +44,32 @@ describe("Entity Document Controller", () => {
     expect(board.created).not.toBe(undefined);
     expect(board.labels.length).toBe(0);
   });
+
+  it("Should create a project with 2 boards and get them", async () => {
+    const user = await testUtil.generateRandomUser();
+    const project = await testUtil.generateRandomProject(user._id);
+
+    const constructor: IKanbanBoardContructor = {
+      ownerId: user._id,
+      projectId: project._id,
+      backgroundColor: "",
+      private: false,
+      title: "first board",
+    };
+    const board = await kanbanBoardController.Create(constructor);
+
+    const constructor2: IKanbanBoardContructor = {
+      ownerId: user._id,
+      projectId: project._id,
+      backgroundColor: "",
+      private: false,
+      title: "first board",
+    };
+    const board2 = await kanbanBoardController.Create(constructor2);
+
+    const boards = await kanbanBoardController.GetAllProjectBoards(project._id);
+    expect(boards.length).toBe(2);
+  })
 
   it("Should get board by ID", async () => {
     const user = await testUtil.generateRandomUser();

@@ -1,18 +1,18 @@
 import mongoose from "mongoose";
-import projectController from "../project.controller";
-import userController from "../user.controller";
-import kanbanBoardController from "./kanbanBoard.controller";
-import testUtil from "../__TESTS__/testUtil";
+import projectController from "../../project.controller";
+import userController from "../../user.controller";
+import kanbanBoardController from "../kanbanBoard.controller";
+import testUtil from "../../__TESTS__/testUtil";
 import {
   IKanbanBoardContructor,
   IKanbanBoardSchema,
-} from "../../models/kanban/kanbanBoard.model";
-import { IProject } from "../../models/project.model";
-import { IUser } from "../../models/user.model";
-import kanbanBoardCardController from "./kanbanBoardCard.controller";
-import { IKanbanBoardCardConstructor } from "../../models/kanban/kanbanBoardCard.model";
-import { IKanbanBoardCardCommentConstructor, IKanbanBoardCardCommentSchema } from "../../models/kanban/kanbanBoardComment.model";
-import kanbanBoardCardCommentController from "./kanbanBoardCardComment.controller";
+} from "../../../models/kanban/kanbanBoard.model";
+import { IProject } from "../../../models/project.model";
+import { IUser } from "../../../models/user.model";
+import kanbanBoardCardController from "../kanbanBoardCard.controller";
+import { IKanbanBoardCardConstructor } from "../../../models/kanban/kanbanBoardCard.model";
+import { IKanbanBoardCardCommentConstructor, IKanbanBoardCardCommentSchema } from "../../../models/kanban/kanbanBoardComment.model";
+import kanbanBoardCardCommentController from "../kanbanBoardCardComment.controller";
 describe("Entity Document Controller", () => {
   function createDummyBoard(): Promise<{
     user: IUser;

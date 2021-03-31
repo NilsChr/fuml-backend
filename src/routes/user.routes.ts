@@ -2,10 +2,9 @@ import { TRoutesInput } from "../types/routes";
 import { checkIfAuthenticated } from "../middlewares/auth.middleware";
 import { logReq, logRes } from "../middlewares/log.middleware";
 import userController from "../controllers/user.controller";
+import { apiRoutes } from "./routeRegistry";
 
 export default ({ app }: TRoutesInput) => {
-  let base = "/api/users";
-
   /**
    * Get account
    */
@@ -24,7 +23,7 @@ export default ({ app }: TRoutesInput) => {
    * Get User by Id
    */
   app.get(
-    base +"/:id",
+    apiRoutes.users +"/:id",
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
@@ -41,7 +40,7 @@ export default ({ app }: TRoutesInput) => {
    * Update User
    */
   app.put(
-    base + "/:id",
+    apiRoutes.users + "/:id",
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
@@ -65,8 +64,7 @@ export default ({ app }: TRoutesInput) => {
   /**
    * Delete User
    */
-  app.delete(base + "/:id", logReq,checkIfAuthenticated, async (req: any, res: any, next: any) => {
-    console.log("DELETE: " + base);
+  app.delete(apiRoutes.users + "/:id", logReq,checkIfAuthenticated, async (req: any, res: any, next: any) => {
     try {
       const requestedUser = await userController.GetById(req.params.id);
       if (!requestedUser._id.equals(req.user._id)) {

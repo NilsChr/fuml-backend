@@ -49,6 +49,14 @@ function GetById(id: mongoose.Types.ObjectId): Promise<IKanbanBoardSchema> {
   });
 }
 
+function GetAllProjectBoards(projectId: mongoose.Types.ObjectId): Promise<IKanbanBoardSchema[]>  {
+    return new Promise(async (resolve, reject) => {
+        const query = { projectId: projectId };
+        const boards = await KanbanBoard.find(query);
+        return resolve(boards);
+      });
+}
+
 function GetCards(
   id: mongoose.Types.ObjectId
 ): Promise<IKanbanBoardCardSchema[]> {
@@ -99,6 +107,7 @@ export default {
   Create,
   Flush,
   Get,
+  GetAllProjectBoards,
   GetById,
   GetCards,
   Update,

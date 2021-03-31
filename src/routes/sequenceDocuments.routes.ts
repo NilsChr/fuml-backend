@@ -2,22 +2,16 @@ import { TRoutesInput } from "../types/routes";
 import { checkIfAuthenticated } from "../middlewares/auth.middleware";
 import { logReq, logRes } from "../middlewares/log.middleware";
 import projectController from "../controllers/project.controller";
-import { IProjectDTO } from "../models/project.model";
-import entityDocumentModel, {
-  IEntityDocumentConstructor,
-} from "../models/entityDocument.model";
-import entityDocumentController from "../controllers/entityDocument.controller";
 import { ISequenceDocumentConstructor } from "../models/sequenceDocument.model";
 import sequenceDocumentController from "../controllers/sequenceDocument.controller";
+import { apiRoutes } from "./routeRegistry";
 
 export default ({ app }: TRoutesInput) => {
-  let base = "/api/sequencedocuments";
-
   /**
    * Post SequenceDocuments
    */
   app.post(
-    base,
+    apiRoutes.sequenceDocuments,
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
@@ -44,7 +38,7 @@ export default ({ app }: TRoutesInput) => {
    * Get Sequence Document
    */
   app.get(
-    base + "/:id",
+    apiRoutes.sequenceDocuments + "/:id",
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
@@ -70,7 +64,7 @@ export default ({ app }: TRoutesInput) => {
    * Update Sequence Document
    */
   app.put(
-    base + "/:id",
+    apiRoutes.sequenceDocuments + "/:id",
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
@@ -104,14 +98,13 @@ export default ({ app }: TRoutesInput) => {
   );
 
   /**
-   * Delete Entity Document
+   * Delete Sequence Document
    */
   app.delete(
-    base + "/:id",
+    apiRoutes.sequenceDocuments + "/:id",
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
-      console.log("DELETE: " + base);
       try {
         const requestedDocument = await sequenceDocumentController.GetById(
           req.params.id

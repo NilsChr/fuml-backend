@@ -3,16 +3,15 @@ import { checkIfAuthenticated } from "../middlewares/auth.middleware";
 import { logReq, logRes } from "../middlewares/log.middleware";
 import userController from "../controllers/user.controller";
 import projectController from "../controllers/project.controller";
-import { IProjectDTO } from "../models/project.model";
+import { apiRoutes } from "./routeRegistry";
 
 export default ({ app }: TRoutesInput) => {
-  let base = "/api/projects";
 
   /**
    * Post Project collaborators
    */
   app.post(
-    base + "/:id/collaborators",
+    apiRoutes.projects + "/:id/collaborators",
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
@@ -41,7 +40,7 @@ export default ({ app }: TRoutesInput) => {
    * Get Project collaborators
    */
   app.get(
-    base + "/:id/collaborators",
+    apiRoutes.projects + "/:id/collaborators",
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
@@ -75,7 +74,7 @@ export default ({ app }: TRoutesInput) => {
    * Delete Project collaborators
    */
   app.delete(
-    base + "/:id/collaborators/:collaboratorId",
+    apiRoutes.projects + "/:id/collaborators/:collaboratorId",
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {

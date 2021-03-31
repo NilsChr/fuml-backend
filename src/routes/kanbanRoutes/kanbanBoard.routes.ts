@@ -1,20 +1,19 @@
-import { TRoutesInput } from "../types/routes";
-import { checkIfAuthenticated } from "../middlewares/auth.middleware";
-import { logReq, logRes } from "../middlewares/log.middleware";
-import projectController from "../controllers/project.controller";
-import {
-  IEntityDocumentConstructor,
-} from "../models/entityDocument.model";
-import entityDocumentController from "../controllers/entityDocument.controller";
-import { apiRoutes } from "./routeRegistry";
+import { TRoutesInput } from "../../types/routes";
+import { checkIfAuthenticated } from "../../middlewares/auth.middleware";
+import { logReq, logRes } from "../../middlewares/log.middleware";
+import projectController from "../../controllers/project.controller";
+import { IProjectDTO } from "../../models/project.model";
+import { IKanbanBoardContructor } from "../../models/kanban/kanbanBoard.model";
+import kanbanBoardController from "../../controllers/kanban/kanbanBoard.controller";
+import { apiRoutes } from "../routeRegistry";
 
 export default ({ app }: TRoutesInput) => {
 
   /**
-   * Post EntityDocuments
+   * Post KanbanBoard
    */
   app.post(
-    apiRoutes.entityDocuments,
+    apiRoutes.kanbanboards,
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
@@ -23,13 +22,15 @@ export default ({ app }: TRoutesInput) => {
         if (!project) {
           return res.status(404).send();
         }
-        const projectData: IEntityDocumentConstructor = {
+        const kanbanBoard: IKanbanBoardContructor = {
+          projectId: project._id,
+          ownerId: req.user._id,
           title: req.body.title,
-          ownerId: req.user._id,//req.body.ownerId,
-          projectId: req.body.projectId,
+          backgroundColor: req.body.backgroundColor,
+          private: req.body.private,
         };
-        const newDoc = await entityDocumentController.Create(projectData);
-        res.status(201).send(newDoc);
+        const newBoard = await kanbanBoardController.Create(kanbanBoard);
+        res.status(201).send(newBoard);
       } catch (e) {
         console.log(e);
         res.status(500).send();
@@ -40,8 +41,9 @@ export default ({ app }: TRoutesInput) => {
   /**
    * Get Entity Document
    */
+  /*
   app.get(
-    apiRoutes.entityDocuments + "/:id",
+    base + "/:id",
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
@@ -62,12 +64,14 @@ export default ({ app }: TRoutesInput) => {
       return res.status(200).send(requestedDocument);
     }
   );
+  */
 
   /**
    * Update Entity Document
    */
+  /*
   app.put(
-    apiRoutes.entityDocuments + "/:id",
+    base + "/:id",
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
@@ -98,15 +102,18 @@ export default ({ app }: TRoutesInput) => {
       }
     }
   );
+  */
 
   /**
    * Delete Entity Document
    */
+  /*
   app.delete(
-    apiRoutes.entityDocuments + "/:id",
+    base + "/:id",
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
+      console.log("DELETE: " + base);
       try {
         const requestedDocument = await entityDocumentController.GetById(
           req.params.id
@@ -132,4 +139,5 @@ export default ({ app }: TRoutesInput) => {
       }
     }
   );
+  */
 };

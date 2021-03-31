@@ -5,15 +5,15 @@ import projectController from "../controllers/project.controller";
 import { IProjectDTO } from "../models/project.model";
 import sequenceDocumentController from "../controllers/sequenceDocument.controller";
 import entityDocumentController from "../controllers/entityDocument.controller";
+import { apiRoutes } from "./routeRegistry";
 
 export default ({ app }: TRoutesInput) => {
-  let base = "/api/projects";
 
   /**
    * Post Projects
    */
   app.post(
-    base,
+    apiRoutes.projects,
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
@@ -43,7 +43,7 @@ export default ({ app }: TRoutesInput) => {
    * Get Projects
    */
   app.get(
-    base,
+    apiRoutes.projects,
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
@@ -57,7 +57,7 @@ export default ({ app }: TRoutesInput) => {
    * Get Project by Id
    */
   app.get(
-    base + "/:id",
+    apiRoutes.projects + "/:id",
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
@@ -74,7 +74,7 @@ export default ({ app }: TRoutesInput) => {
    * Get Project documents
    */
    app.get(
-    base + "/:id/documents",
+    apiRoutes.projects + "/:id/documents",
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
@@ -107,7 +107,7 @@ export default ({ app }: TRoutesInput) => {
    * Update Project
    */
   app.put(
-    base + "/:id",
+    apiRoutes.projects + "/:id",
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
@@ -139,11 +139,10 @@ export default ({ app }: TRoutesInput) => {
    * Delete Project
    */
   app.delete(
-    base + "/:id",
+    apiRoutes.projects + "/:id",
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
-      console.log("DELETE: " + base);
       try {
         const requestedProject = await projectController.GetById(req.params.id);
         

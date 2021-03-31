@@ -5,6 +5,17 @@ import userRoutes from "./user.routes";
 import entityDocumentsRoutes from "./entityDocuments.routes";
 import sequenceDocumentsRoutes from "./sequenceDocuments.routes";
 import servicesRoutes from "./services.routes";
+import kanbanBoardRoutes from "./kanbanRoutes/kanbanBoard.routes";
+
+export const apiRoutes = {
+    projects: '/api/projects',
+    entityDocuments: '/api/entitydocuments',
+    sequenceDocuments: '/api/sequencedocuments',
+    services: '/api/services',
+    users: '/api/users',
+
+    kanbanboards: '/api/kanbanboards'
+}
 
 export default ({ app }: TRoutesInput) => {
     userRoutes({app});
@@ -13,4 +24,7 @@ export default ({ app }: TRoutesInput) => {
     entityDocumentsRoutes({app});
     sequenceDocumentsRoutes({app});
     servicesRoutes({app});
+
+    // Kanban
+    kanbanBoardRoutes({app});
 }
