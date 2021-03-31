@@ -109,21 +109,29 @@ describe("User routes", () => {
     expect(updatedUser.nickName).toBe("master");
   });
 
-  it("Should delete a user", async () => {
+  it("Should try to update other users nickname", async () => {
     const token = await testUtilFirebase.loginFirebase();
     const res = await request(app)
       .get("/api/account")
       .set({ Authorization: "Bearer " + token })
       .send();
 
+      expect(res.status).toBe(200);
+    
     const user: IUser = (<any>res).body;
+
+    expect(user._id).not.toBe(undefined);
 
     const token2 = await testUtilFirebase.loginFirebase2();
     const res2 = await request(app)
       .get("/api/account")
       .set({ Authorization: "Bearer " + token2 })
       .send();
+
     const user2: IUser = (<any>res2).body;
+    expect(user2._id).not.toBe(undefined);
+    const originalName = user2.nickName;
+    expect(originalName).not.toBe(undefined);
 
     user2.nickName = "master";
     const res3 = await request(app)
@@ -134,10 +142,12 @@ describe("User routes", () => {
     expect(res3.status).toBe(403);
 
     const updatedUser = await userController.GetById(user2._id);
-    expect(updatedUser.nickName).toBe("");
+    expect(updatedUser).not.toBe(null);
+
+    expect(updatedUser.nickName).toBe(originalName);
   });
 
-  it("Should try to update other users nickname", async () => {
+  it("Should delete a user", async () => {
     const token = await testUtilFirebase.loginFirebase();
     const res = await request(app)
       .get("/api/account")
@@ -156,4 +166,5 @@ describe("User routes", () => {
     const userAfterDelete = await userController.GetById(user._id);
     expect(userAfterDelete).toBeNull();
   });
+
 });

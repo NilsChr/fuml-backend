@@ -56,6 +56,7 @@ export default ({ app }: TRoutesInput) => {
         logRes(200, updatedUser);
         return res.status(200).send(updatedUser);
       } catch (e) {
+        console.log(e);
         res.status(500).send();
       }
     }

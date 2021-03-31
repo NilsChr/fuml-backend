@@ -1,7 +1,6 @@
 import { TRoutesInput } from "../types/routes";
 import { checkIfAuthenticated } from "../middlewares/auth.middleware";
 import { logReq, logRes } from "../middlewares/log.middleware";
-import userController from "../controllers/user.controller";
 import projectController from "../controllers/project.controller";
 import { IProjectDTO } from "../models/project.model";
 import sequenceDocumentController from "../controllers/sequenceDocument.controller";

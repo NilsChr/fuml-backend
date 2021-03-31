@@ -2,6 +2,10 @@ import User, { IUser, IUserDTO, IUserUpdatesDTO } from "../models/user.model";
 import mongoose from "mongoose";
 
 function Create(user: IUserDTO): Promise<IUser> {
+  if(!user.nickName) {
+    user.nickName = 'no username'
+  }
+
   return User.create(user)
     .then((data: IUser) => {
       return data;
