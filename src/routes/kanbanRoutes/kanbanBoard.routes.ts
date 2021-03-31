@@ -8,7 +8,6 @@ import kanbanBoardController from "../../controllers/kanban/kanbanBoard.controll
 import { apiRoutes } from "../routeRegistry";
 
 export default ({ app }: TRoutesInput) => {
-
   /**
    * Post KanbanBoard
    */
@@ -39,105 +38,115 @@ export default ({ app }: TRoutesInput) => {
   );
 
   /**
-   * Get Entity Document
+   * Get Board By Id
    */
-  /*
   app.get(
-    base + "/:id",
+    apiRoutes.kanbanboards + "/:id",
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
-      const requestedDocument = await entityDocumentController.GetById(
-        req.params.id
-      );
-      if (!requestedDocument) {
+      const requestedBoard = await kanbanBoardController.GetById(req.params.id);
+      if (!requestedBoard) {
         return res.status(404).send();
       }
 
-      const project = await projectController.GetById(
-        requestedDocument.projectId
-      );
+      const project = await projectController.GetById(requestedBoard.projectId);
       if (!project.collaborators.includes(req.user._id)) {
         return res.status(403).send();
       }
-      logRes(200, requestedDocument);
-      return res.status(200).send(requestedDocument);
+
+      if (
+        !requestedBoard.ownerId.equals(req.user._id) &&
+        requestedBoard.private
+      ) {
+        return res.status(403).send();
+      }
+
+      logRes(200, requestedBoard);
+      return res.status(200).send(requestedBoard);
     }
   );
-  */
 
   /**
-   * Update Entity Document
+   * Update Kanban board
    */
-  /*
   app.put(
-    base + "/:id",
+    apiRoutes.kanbanboards + "/:id",
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
       try {
-        const requestedDocument = await entityDocumentController.GetById(
+        const requestedBoard = await kanbanBoardController.GetById(
           req.params.id
         );
-        if (!requestedDocument) {
+        if (!requestedBoard) {
           return res.status(404).send();
         }
 
         const project = await projectController.GetById(
-          requestedDocument.projectId
+          requestedBoard.projectId
         );
         if (!project.collaborators.includes(req.user._id)) {
           return res.status(403).send();
         }
+
+        if (
+          !requestedBoard.ownerId.equals(req.user._id) &&
+          requestedBoard.private
+        ) {
+          return res.status(403).send();
+        }
+
         const updates = req.body;
 
-        const updatedDocument = await entityDocumentController.Update(
-          requestedDocument,
+        const updatedBoard = await kanbanBoardController.Update(
+          requestedBoard,
           updates
         );
-        logRes(200, updatedDocument);
-        return res.status(200).send(updatedDocument);
+        logRes(200, updatedBoard);
+        return res.status(200).send(updatedBoard);
       } catch (e) {
         res.status(500).send();
       }
     }
   );
-  */
 
   /**
    * Delete Entity Document
    */
-  /*
   app.delete(
-    base + "/:id",
+    apiRoutes.kanbanboards + "/:id",
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
-      console.log("DELETE: " + base);
       try {
-        const requestedDocument = await entityDocumentController.GetById(
+        const requestedBoard = await kanbanBoardController.GetById(
           req.params.id
         );
-        if (!requestedDocument) {
+        if (!requestedBoard) {
           return res.status(404).send();
         }
 
         const project = await projectController.GetById(
-          requestedDocument.projectId
+          requestedBoard.projectId
         );
         if (!project.collaborators.includes(req.user._id)) {
           return res.status(403).send();
         }
-        const deletedDocument = await entityDocumentController.Delete(
-          requestedDocument._id
+
+        if (!requestedBoard.ownerId.equals(req.user._id)) {
+          return res.status(403).send();
+        }
+
+        const deletedBoard = await kanbanBoardController.Delete(
+          requestedBoard._id
         );
-        logRes(200, deletedDocument);
-        return res.status(200).send(deletedDocument);
+        logRes(200, deletedBoard);
+        return res.status(200).send(deletedBoard);
       } catch (e) {
         console.log(e);
         res.status(500).send();
       }
     }
   );
-  */
 };
