@@ -1,5 +1,12 @@
 import mongoose from "mongoose";
-import KanbanBoard,{ IKanbanBoardContructor, IKanbanBoardDTO, IKanbanBoardSchema } from "../../models/kanban/kanbanBoard.model";
+import KanbanBoard, {
+  IKanbanBoardContructor,
+  IKanbanBoardDTO,
+  IKanbanBoardSchema,
+} from "../../models/kanban/kanbanBoard.model";
+import kanbanBoardCardModel, {
+  IKanbanBoardCardSchema,
+} from "../../models/kanban/kanbanBoardCard.model";
 
 function Create(
   kanbanBoard: IKanbanBoardContructor
@@ -11,7 +18,7 @@ function Create(
     created: new Date().getTime(),
     backgroundColor: kanbanBoard.backgroundColor,
     labels: [],
-    private: kanbanBoard.private
+    private: kanbanBoard.private,
   };
   return KanbanBoard.create(board)
     .then(async (data: IKanbanBoardSchema) => {
@@ -42,13 +49,22 @@ function GetById(id: mongoose.Types.ObjectId): Promise<IKanbanBoardSchema> {
   });
 }
 
+function GetCards(
+  id: mongoose.Types.ObjectId
+): Promise<IKanbanBoardCardSchema[]> {
+  return new Promise(async (resolve, reject) => {
+    const query = { boardId: id };
+    const cards = await kanbanBoardCardModel.find(query);
+    return resolve(cards);
+  });
+}
+
 function Update(
   board: IKanbanBoardSchema,
   updates: IKanbanBoardDTO
 ): Promise<IKanbanBoardSchema> {
   return new Promise(async (resolve, reject) => {
     try {
-
       const sanitizedUpdates = {
         title: updates.title,
         backgroundColor: updates.backgroundColor,
@@ -84,6 +100,7 @@ export default {
   Flush,
   Get,
   GetById,
+  GetCards,
   Update,
   Delete,
 };

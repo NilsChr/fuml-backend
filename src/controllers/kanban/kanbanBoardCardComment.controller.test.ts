@@ -147,7 +147,6 @@ describe("Entity Document Controller", () => {
 
     const commentAfter = await kanbanBoardCardCommentController.GetById(comment._id);
     expect(commentAfter).toBeNull();
-
   });
   
 });

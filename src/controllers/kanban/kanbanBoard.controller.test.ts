@@ -4,6 +4,8 @@ import userController from "../user.controller";
 import kanbanBoardController from "./kanbanBoard.controller";
 import testUtil from "../__TESTS__/testUtil";
 import { IKanbanBoardContructor } from "../../models/kanban/kanbanBoard.model";
+import { IKanbanBoardCardConstructor } from "../../models/kanban/kanbanBoardCard.model";
+import kanbanBoardCardController from "./kanbanBoardCard.controller";
 describe("Entity Document Controller", () => {
   beforeAll(async () => {
     const m = await mongoose.connect(global.__MONGO_URI__, {
@@ -101,5 +103,31 @@ describe("Entity Document Controller", () => {
     const boardsAfter = await kanbanBoardController.Get();
     expect(boardsAfter.length).toBe(0);
   });
-  
+
+  it("Should create a kanban board, add cards, then get them all", async () => {
+    const user = await testUtil.generateRandomUser();
+    const project = await testUtil.generateRandomProject(user._id);
+
+    const constructor: IKanbanBoardContructor = {
+      ownerId: user._id,
+      projectId: project._id,
+      backgroundColor: "",
+      private: false,
+      title: "first board",
+    };
+
+    const board = await kanbanBoardController.Create(constructor);
+
+    const constructorCard: IKanbanBoardCardConstructor = {
+      boardId: board._id,
+      ownerId: user._id,
+      description: testUtil.generateRandomName(),
+      title: testUtil.generateRandomName(),
+    };
+
+    const card = await kanbanBoardCardController.Create(constructorCard);
+
+    const boardCards = await kanbanBoardController.GetCards(board._id);
+    expect(boardCards.length).toBe(1);
+  });
 });

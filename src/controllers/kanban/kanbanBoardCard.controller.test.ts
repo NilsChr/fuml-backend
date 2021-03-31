@@ -11,6 +11,8 @@ import { IProject } from "../../models/project.model";
 import { IUser } from "../../models/user.model";
 import kanbanBoardCardController from "./kanbanBoardCard.controller";
 import { IKanbanBoardCardConstructor } from "../../models/kanban/kanbanBoardCard.model";
+import { IKanbanBoardCardCommentConstructor, IKanbanBoardCardCommentSchema } from "../../models/kanban/kanbanBoardComment.model";
+import kanbanBoardCardCommentController from "./kanbanBoardCardComment.controller";
 describe("Entity Document Controller", () => {
   function createDummyBoard(): Promise<{
     user: IUser;
@@ -31,6 +33,18 @@ describe("Entity Document Controller", () => {
       const board = await kanbanBoardController.Create(constructor);
       return resolve({ user, project, board });
     });
+  }
+
+  function createDummyComment(cardId: mongoose.Types.ObjectId,ownerId: mongoose.Types.ObjectId): Promise<IKanbanBoardCardCommentSchema> {
+      return new Promise(async (resolve) => {
+          const constructor: IKanbanBoardCardCommentConstructor = {
+            cardId: cardId,
+            ownerId: ownerId,
+            text: testUtil.generateRandomName()
+          } 
+        const comment = await kanbanBoardCardCommentController.Create(constructor)
+        resolve(comment);
+      })
   }
 
   beforeAll(async () => {
@@ -144,4 +158,27 @@ describe("Entity Document Controller", () => {
 
   });
   
+  it("Should create a kanban board card, add comments then get all comments for specific card", async () => {
+    const { user, board } = await createDummyBoard();
+
+    const constructor: IKanbanBoardCardConstructor = {
+      boardId: board._id,
+      ownerId: user._id,
+      description: testUtil.generateRandomName(),
+      title: testUtil.generateRandomName(),
+    };
+
+    const card1 = await kanbanBoardCardController.Create(constructor);
+    const comment1 = await createDummyComment(card1._id, user._id);
+    const comment2 = await createDummyComment(card1._id, user._id);
+
+    const card1Comments = await kanbanBoardCardController.GetComments(card1._id);
+
+    expect(card1Comments.length).toBe(2);
+
+    const card2 = await kanbanBoardCardController.Create(constructor);
+    const card2Comments = await kanbanBoardCardController.GetComments(card2._id);
+
+    expect(card2Comments.length).toBe(0);
+  })
 });

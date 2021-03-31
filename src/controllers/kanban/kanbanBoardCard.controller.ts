@@ -5,6 +5,9 @@ import KanbanBoardCard, {
   IKanbanBoardCardDTO,
   KanbanBoardCardStatus,
 } from "../../models/kanban/kanbanBoardCard.model";
+import kanbanBoardComment, {
+  IKanbanBoardCardCommentSchema,
+} from "../../models/kanban/kanbanBoardComment.model";
 
 function Create(
   kanbanBoardCard: IKanbanBoardCardConstructor
@@ -17,7 +20,7 @@ function Create(
     labels: [],
     description: "",
     status: KanbanBoardCardStatus.todo,
-    assignees: []
+    assignees: [],
   };
   return KanbanBoardCard.create(card)
     .then(async (data: IKanbanBoardCardSchema) => {
@@ -48,6 +51,16 @@ function GetById(id: mongoose.Types.ObjectId): Promise<IKanbanBoardCardSchema> {
   });
 }
 
+function GetComments(
+  cardId: mongoose.Types.ObjectId
+): Promise<IKanbanBoardCardCommentSchema[]> {
+  return new Promise(async (resolve, reject) => {
+    const query = { cardId: cardId };
+    const comments = await kanbanBoardComment.find(query);
+    return resolve(comments);
+  });
+}
+
 function Update(
   card: IKanbanBoardCardSchema,
   updates: IKanbanBoardCardDTO
@@ -59,7 +72,7 @@ function Update(
         labels: updates.labels,
         description: updates.description,
         status: updates.status,
-        assignees: updates.assignees
+        assignees: updates.assignees,
       };
 
       const updatedCard = await KanbanBoardCard.findByIdAndUpdate(
@@ -91,6 +104,7 @@ export default {
   Flush,
   Get,
   GetById,
+  GetComments,
   Update,
   Delete,
 };
