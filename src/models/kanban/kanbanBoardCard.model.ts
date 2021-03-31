@@ -22,6 +22,7 @@ export interface IKanbanBoardCardSchema extends Document {
   title: string;
   status: KanbanBoardCardStatus;
   created: Number;
+  completed: Number;
   description: string;
   labels: IKanbanBoardLabel[];
   assignees: mongoose.Types.ObjectId[]
@@ -33,6 +34,7 @@ export interface IKanbanBoardCardDTO {
   title: string;
   status: KanbanBoardCardStatus;
   created: Number;
+  completed: Number;
   description: string;
   labels: IKanbanBoardLabel[];
   assignees: mongoose.Types.ObjectId[]
@@ -45,6 +47,7 @@ const KanbanBoardCardSchema: Schema = new Schema({
   title: { type: String, required: true },
   status: { type: KanbanBoardCardStatus },
   created: { type: Number, default: Date.now() },
+  completed: { type: Number, default: Date.now() },
   description: { type: String },
   labels: [{ title: { type: String }, color: { type: String } }],
 });

@@ -17,6 +17,7 @@ function Create(
     title: kanbanBoardCard.title,
     ownerId: kanbanBoardCard.ownerId,
     created: new Date().getTime(),
+    completed: null,
     labels: [],
     description: "",
     status: KanbanBoardCardStatus.todo,
@@ -73,7 +74,12 @@ function Update(
         description: updates.description,
         status: updates.status,
         assignees: updates.assignees,
+        completed: updates.completed
       };
+
+      if(sanitizedUpdates.status != KanbanBoardCardStatus.done) {
+          sanitizedUpdates.completed = null;
+      }
 
       const updatedCard = await KanbanBoardCard.findByIdAndUpdate(
         card._id,

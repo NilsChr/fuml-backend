@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import request from "supertest";
-import userController from "../../controllers/user.controller";
 import testUtil from "../../controllers/__TESTS__/testUtil";
 import testUtilFirebase from "../../controllers/__TESTS__/testUtilFirebase";
 import app, { server } from "../../index";
@@ -12,7 +11,7 @@ import { stubBoard } from "../../testUtility/stubs/kanbanBoard.stub";
 import projectController from "../../controllers/project.controller";
 import kanbanBoardController from "../../controllers/kanban/kanbanBoard.controller";
 
-describe("User routes", () => {
+describe("Kanban board routes", () => {
   function mockLogin(): Promise<{
     user: IUser;
     token: string;

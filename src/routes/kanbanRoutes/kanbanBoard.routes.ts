@@ -112,7 +112,7 @@ export default ({ app }: TRoutesInput) => {
   );
 
   /**
-   * Delete Entity Document
+   * Delete Kanban Board
    */
   app.delete(
     apiRoutes.kanbanboards + "/:id",
