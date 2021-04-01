@@ -52,6 +52,15 @@ function GetById(id: mongoose.Types.ObjectId): Promise<IKanbanBoardCardSchema> {
   });
 }
 
+function GetAllCardsForBoard(id: mongoose.Types.ObjectId): Promise<IKanbanBoardCardSchema[]> {
+    return new Promise(async (resolve, reject) => {
+        const query = { boardId: id };
+
+      const card = await KanbanBoardCard.find(query);
+      return resolve(card);
+    });
+  }
+
 function GetComments(
   cardId: mongoose.Types.ObjectId
 ): Promise<IKanbanBoardCardCommentSchema[]> {
@@ -110,6 +119,7 @@ export default {
   Flush,
   Get,
   GetById,
+  GetAllCardsForBoard,
   GetComments,
   Update,
   Delete,

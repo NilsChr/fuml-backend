@@ -6,6 +6,7 @@ import { IProjectDTO } from "../models/project.model";
 import sequenceDocumentController from "../controllers/sequenceDocument.controller";
 import entityDocumentController from "../controllers/entityDocument.controller";
 import { apiRoutes } from "./routeRegistry";
+import kanbanBoardController from "../controllers/kanban/kanbanBoard.controller";
 
 export default ({ app }: TRoutesInput) => {
 
@@ -100,6 +101,24 @@ export default ({ app }: TRoutesInput) => {
 
       logRes(200, documents);
       return res.status(200).send(documents);
+    }
+  );
+
+  /**
+   * Get Project boards
+   */
+   app.get(
+    apiRoutes.projects + "/:id/boards",
+    logReq,
+    checkIfAuthenticated,
+    async (req: any, res: any, next: any) => {
+      const requestedProject = await projectController.GetById(req.params.id);
+      if (!requestedProject.collaborators.includes(req.user._id)) {
+        return res.status(403).send();
+      }
+      const boards = await kanbanBoardController.GetAllProjectBoards(requestedProject._id)
+      logRes(200, boards);
+      return res.status(200).send(boards);
     }
   );
 

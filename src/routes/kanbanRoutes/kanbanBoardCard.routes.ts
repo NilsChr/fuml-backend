@@ -60,6 +60,34 @@ export default ({ app }: TRoutesInput) => {
   );
 
   /**
+   * Get Cards By Board
+   */
+   app.get(
+    apiRoutes.kanbanboards + "/:id/cards",
+    logReq,
+    checkIfAuthenticated,
+    async (req: any, res: any, next: any) => {
+      const requestedBoard = await kanbanBoardController.GetById(req.params.id);
+      if (!requestedBoard) {
+        return res.status(404).send();
+      }
+
+      const project = await projectController.GetById(requestedBoard.projectId);
+      if (!project.collaborators.includes(req.user._id)) {
+        return res.status(403).send();
+      }
+
+      const requestedCards = await kanbanBoardCardController.GetAllCardsForBoard(requestedBoard._id);
+      if (!requestedCards) {
+        return res.status(404).send();
+      }
+
+      logRes(200, requestedCards);
+      return res.status(200).send(requestedCards);
+    }
+  );
+
+  /**
    * Get Card By Id
    */
   app.get(
