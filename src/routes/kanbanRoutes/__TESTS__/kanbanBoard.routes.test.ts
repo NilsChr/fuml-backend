@@ -1,15 +1,15 @@
 import mongoose from "mongoose";
 import request from "supertest";
-import testUtil from "../../controllers/__TESTS__/testUtil";
-import testUtilFirebase from "../../controllers/__TESTS__/testUtilFirebase";
-import app, { server } from "../../index";
-import { IKanbanBoardDTO, IKanbanBoardSchema } from "../../models/kanban/kanbanBoard.model";
-import { IProject } from "../../models/project.model";
-import { IUser } from "../../models/user.model";
-import { apiRoutes } from "../routeRegistry";
-import { stubBoard } from "../../testUtility/stubs/kanbanBoard.stub";
-import projectController from "../../controllers/project.controller";
-import kanbanBoardController from "../../controllers/kanban/kanbanBoard.controller";
+import testUtil from "../../../controllers/__TESTS__/testUtil";
+import testUtilFirebase from "../../../controllers/__TESTS__/testUtilFirebase";
+import app, { server } from "../../../index";
+import { IKanbanBoardDTO, IKanbanBoardSchema } from "../../../models/kanban/kanbanBoard.model";
+import { IProject } from "../../../models/project.model";
+import { IUser } from "../../../models/user.model";
+import { apiRoutes } from "../../routeRegistry";
+import { stubBoard } from "../../../testUtility/stubs/kanbanBoard.stub";
+import projectController from "../../../controllers/project.controller";
+import kanbanBoardController from "../../../controllers/kanban/kanbanBoard.controller";
 
 describe("Kanban board routes", () => {
   function mockLogin(): Promise<{

@@ -7,6 +7,7 @@ import sequenceDocumentsRoutes from "./sequenceDocuments.routes";
 import servicesRoutes from "./services.routes";
 import kanbanBoardRoutes from "./kanbanRoutes/kanbanBoard.routes";
 import kanbanBoardCardRoutes from "./kanbanRoutes/kanbanBoardCard.routes";
+import kanbanBoardCommentRoutes from "./kanbanRoutes/kanbanBoardComment.routes";
 
 export const apiRoutes = {
     projects: '/api/projects',
@@ -29,4 +30,5 @@ export default ({ app }: TRoutesInput) => {
     // Kanban
     kanbanBoardRoutes({app});
     kanbanBoardCardRoutes({app});
+    kanbanBoardCommentRoutes({app});
 }
