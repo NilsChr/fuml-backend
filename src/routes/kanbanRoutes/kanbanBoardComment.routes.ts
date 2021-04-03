@@ -65,6 +65,44 @@ export default ({ app }: TRoutesInput) => {
   );
 
   /**
+   * Get Card Comments
+   */
+   app.get(
+    apiRoutes.kanbanboards + "/:id/cards/:cardId/comments",
+    logReq,
+    checkIfAuthenticated,
+    async (req: any, res: any, next: any) => {
+      const boardId = req.params.id;
+      const requestedBoard = await kanbanBoardController.GetById(boardId);
+      if (!requestedBoard) {
+        return res.status(404).send();
+      }
+
+      const project = await projectController.GetById(requestedBoard.projectId);
+      if (!project) {
+        return res.status(404).send();
+      }
+      if (!project.collaborators.includes(req.user._id)) {
+        return res.status(403).send();
+      }
+
+      const cardId = req.params.cardId;
+      const card = await kanbanBoardCardController.GetById(cardId);
+      if (!card) {
+        return res.status(404).send();
+      }
+
+      //const commentId = req.params.commentId;
+      //const comment = await kanbanBoardCardCommentController.GetById(commentId);
+      const comments = await kanbanBoardCardController.GetComments(cardId);
+
+
+      logRes(200, comments);
+      return res.status(200).send(comments);
+    }
+  );
+
+  /**
    * Get Comment By Id
    */
   app.get(

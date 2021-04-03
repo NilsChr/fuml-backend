@@ -20,8 +20,9 @@ function Create(
     completed: null,
     labels: [],
     description: "",
-    status: KanbanBoardCardStatus.todo,
+    status: kanbanBoardCard.status || KanbanBoardCardStatus.todo,
     assignees: [],
+    archived: false
   };
   return KanbanBoardCard.create(card)
     .then(async (data: IKanbanBoardCardSchema) => {
@@ -88,6 +89,8 @@ function Update(
 
       if(sanitizedUpdates.status != KanbanBoardCardStatus.done) {
           sanitizedUpdates.completed = null;
+      } else if(sanitizedUpdates.status == KanbanBoardCardStatus.done && !sanitizedUpdates.completed){
+        sanitizedUpdates.completed = new Date().getTime();
       }
 
       const updatedCard = await KanbanBoardCard.findByIdAndUpdate(

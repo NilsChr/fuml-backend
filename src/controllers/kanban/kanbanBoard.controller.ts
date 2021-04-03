@@ -7,6 +7,7 @@ import KanbanBoard, {
 import kanbanBoardCardModel, {
   IKanbanBoardCardSchema,
 } from "../../models/kanban/kanbanBoardCard.model";
+import kanbanBoardCommentModel from "../../models/kanban/kanbanBoardComment.model";
 
 function Create(
   kanbanBoard: IKanbanBoardContructor
@@ -19,6 +20,10 @@ function Create(
     backgroundColor: kanbanBoard.backgroundColor,
     labels: [],
     private: kanbanBoard.private,
+    cardsTodo: 0,
+    cardsDone: 0,
+    cardsInProgress: 0,
+    cardsPending: 0
   };
   return KanbanBoard.create(board)
     .then(async (data: IKanbanBoardSchema) => {
@@ -77,6 +82,10 @@ function Update(
         title: updates.title,
         backgroundColor: updates.backgroundColor,
         labels: updates.labels,
+        cardsTodo: updates.cardsTodo,
+        cardsPending:  updates.cardsPending,
+        cardsInProgress:  updates.cardsInProgress,
+        cardsDone:  updates.cardsDone
       };
 
       const updatedBoard = await KanbanBoard.findByIdAndUpdate(
@@ -95,6 +104,23 @@ function Update(
 function Delete(id: mongoose.Types.ObjectId): Promise<boolean> {
   return new Promise(async (resolve, reject) => {
     try {
+
+      // Find cards
+      const cards = await kanbanBoardCardModel.find({boardId: id});
+      cards.forEach(async (card) => {
+        console.log('Deleteing card', card._id)
+        // Find and delete comments
+        const comments = await kanbanBoardCommentModel.find({cardId: card._id});
+        comments.forEach(async (comment) => {
+            await kanbanBoardCommentModel.findByIdAndDelete(comment._id);
+        })
+
+        console.log('Deleted comments');
+
+        await kanbanBoardCardModel.findByIdAndDelete(card._id);
+      })
+
+
       const deleted = await KanbanBoard.findByIdAndDelete(id);
 
       resolve(deleted != null);

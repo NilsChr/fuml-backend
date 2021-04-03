@@ -5,8 +5,8 @@ import { IKanbanBoardCardCommentSchema } from "./kanbanBoardComment.model";
 export enum KanbanBoardCardStatus {
   todo = 0,
   inProgress = 1,
-  pending = 3,
-  done = 2,
+  pending = 2,
+  done = 3,
 }
 
 export interface IKanbanBoardCardConstructor {
@@ -14,6 +14,7 @@ export interface IKanbanBoardCardConstructor {
   ownerId: mongoose.Types.ObjectId;
   title: string;
   description: string;
+  status: KanbanBoardCardStatus;
 }
 
 export interface IKanbanBoardCardSchema extends Document {
@@ -24,8 +25,9 @@ export interface IKanbanBoardCardSchema extends Document {
   created: Number;
   completed: Number;
   description: string;
-  labels: IKanbanBoardLabel[];
-  assignees: mongoose.Types.ObjectId[]
+  labels: mongoose.Types.ObjectId[];
+  assignees: mongoose.Types.ObjectId[];
+  archived: boolean;
 }
 
 export interface IKanbanBoardCardDTO {
@@ -36,8 +38,9 @@ export interface IKanbanBoardCardDTO {
   created: Number;
   completed: Number;
   description: string;
-  labels: IKanbanBoardLabel[];
-  assignees: mongoose.Types.ObjectId[]
+  labels: mongoose.Types.ObjectId[];
+  assignees: mongoose.Types.ObjectId[];
+  archived: boolean;
 }
 
 const KanbanBoardCardSchema: Schema = new Schema({
@@ -49,7 +52,9 @@ const KanbanBoardCardSchema: Schema = new Schema({
   created: { type: Number, default: Date.now() },
   completed: { type: Number, default: Date.now() },
   description: { type: String },
-  labels: [{ title: { type: String }, color: { type: String } }],
+  //labels: [{ title: { type: String }, color: { type: String } }],
+  labels: [{type: mongoose.Types.ObjectId}],
+  archived: { type: Boolean}
 });
 
 export default mongoose.model<IKanbanBoardCardSchema>(

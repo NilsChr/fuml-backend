@@ -6,7 +6,7 @@ import { IProjectDTO } from "../../models/project.model";
 import { IKanbanBoardContructor } from "../../models/kanban/kanbanBoard.model";
 import kanbanBoardController from "../../controllers/kanban/kanbanBoard.controller";
 import { apiRoutes } from "../routeRegistry";
-import { IKanbanBoardCardConstructor } from "../../models/kanban/kanbanBoardCard.model";
+import { IKanbanBoardCardConstructor, KanbanBoardCardStatus } from "../../models/kanban/kanbanBoardCard.model";
 import kanbanBoardCardController from "../../controllers/kanban/kanbanBoardCard.controller";
 
 export default ({ app }: TRoutesInput) => {
@@ -19,13 +19,15 @@ export default ({ app }: TRoutesInput) => {
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
       try {
+          console.log('POST CARDS')
+          console.log(req.params.id);
         const requestedBoard = await kanbanBoardController.GetById(
           req.params.id
         );
         if (!requestedBoard) {
           return res.status(404).send();
         }
-
+        console.log('1');
         const project = await projectController.GetById(
           requestedBoard.projectId
         );
@@ -35,20 +37,26 @@ export default ({ app }: TRoutesInput) => {
         if (!project.collaborators.includes(req.user._id)) {
           return res.status(403).send();
         }
+        console.log('2');
 
         const title = req.body.title;
         if (!title) {
           return res.status(400).send();
         }
-        const description = req.body.description;
+        /*const description = req.body.description;
         if (!description) {
           return res.status(400).send();
-        }
+        }*/
+        console.log('3');
+
+        const status = req.body.status;
+
         const kanbanBoardCard: IKanbanBoardCardConstructor = {
           boardId: requestedBoard._id,
           ownerId: req.user._id,
           title: title,
-          description: description,
+          description: '',
+          status: status || KanbanBoardCardStatus.todo
         };
         const newCard = await kanbanBoardCardController.Create(kanbanBoardCard);
         res.status(201).send(newCard);

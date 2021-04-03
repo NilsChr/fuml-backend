@@ -38,6 +38,7 @@ describe("Entity Document Controller", () => {
         ownerId: user._id,
         description: testUtil.generateRandomName(),
         title: testUtil.generateRandomName(),
+        status: null
       };
       const card = await kanbanBoardCardController.Create(constructorCard);
 

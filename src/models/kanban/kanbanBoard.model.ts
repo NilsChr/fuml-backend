@@ -16,6 +16,10 @@ export interface IKanbanBoardDTO {
   private: boolean;
   backgroundColor: string;
   labels: IKanbanBoardLabel[];
+  cardsTodo: Number;
+  cardsPending:  Number;
+  cardsInProgress:  Number;
+  cardsDone:  Number;
 }
 
 export interface IKanbanBoardLabel {
@@ -31,6 +35,10 @@ export interface IKanbanBoardSchema extends Document {
   private: boolean;
   backgroundColor: string;
   labels: IKanbanBoardLabel[];
+  cardsTodo: Number;
+  cardsPending:  Number;
+  cardsInProgress:  Number;
+  cardsDone:  Number;
 }
 
 const KanbanBoardSchema: Schema = new Schema({
@@ -41,6 +49,10 @@ const KanbanBoardSchema: Schema = new Schema({
   private: { type: Boolean, default: false },
   backgroundColor: { type: String },
   labels: [{ title: { type: String }, color: { type: String } }],
+  cardsTodo: { type: Number, default: 0},
+  cardsPending: { type: Number, default: 0},
+  cardsInProgress: { type: Number, default: 0},
+  cardsDone: { type: Number, default: 0}
 });
 
 export default mongoose.model<IKanbanBoardSchema>("KanbanBoard", KanbanBoardSchema);
