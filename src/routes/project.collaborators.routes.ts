@@ -4,6 +4,7 @@ import { logReq, logRes } from "../middlewares/log.middleware";
 import userController from "../controllers/user.controller";
 import projectController from "../controllers/project.controller";
 import { apiRoutes } from "./routeRegistry";
+import mongoose, { Mongoose } from "mongoose";
 
 export default ({ app }: TRoutesInput) => {
 
@@ -78,15 +79,21 @@ export default ({ app }: TRoutesInput) => {
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
-      const requestedProject = await projectController.GetById(req.params.id);
-      if (!requestedProject.ownerId.equals(req.user._id)) {
-        return res.status(403).send();
-      }
-
       const removeCollaboratorId = req.params.collaboratorId;
       if (!removeCollaboratorId) {
         return res.status(400).send();
       }
+
+      const removeId = mongoose.Types.ObjectId(removeCollaboratorId);
+
+      const userToDeleteIsAuthUser = removeId.equals(req.user._id);
+
+      const requestedProject = await projectController.GetById(req.params.id);
+      if (!requestedProject.ownerId.equals(req.user._id) && !userToDeleteIsAuthUser) {
+        return res.status(403).send();
+      }
+
+
       const user = await userController.GetById(removeCollaboratorId);
       if (!user) {
         return res.status(404).send();

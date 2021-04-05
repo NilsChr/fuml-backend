@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+import kanbanBoardModel from "../models/kanban/kanbanBoard.model";
+import kanbanBoardCardModel from "../models/kanban/kanbanBoardCard.model";
+import kanbanBoardCommentModel from "../models/kanban/kanbanBoardComment.model";
 import Project, {
   IProject,
   IProjectDTO,
@@ -6,6 +9,9 @@ import Project, {
 } from "../models/project.model";
 import User, { IUser } from "../models/user.model";
 import entityDocumentController from "./entityDocument.controller";
+import kanbanBoardController from "./kanban/kanbanBoard.controller";
+import kanbanBoardCardController from "./kanban/kanbanBoardCard.controller";
+import kanbanBoardCardCommentController from "./kanban/kanbanBoardCardComment.controller";
 import sequenceDocumentController from "./sequenceDocument.controller";
 import userController from "./user.controller";
 
@@ -122,23 +128,48 @@ function Delete(id: mongoose.Types.ObjectId): Promise<boolean> {
   return new Promise(async (resolve, reject) => {
     try {
       const project = await Project.findById(id);
+
+      // DELETE SEQUENCE DOCUMENTS
       for (let i = 0; i < project.sequenceDocuments.length; i++) {
         const sequenceDocument = project.sequenceDocuments[i];
         await sequenceDocumentController.Delete(sequenceDocument);
       }
 
+      // DELETE ENTITY DOCUMENTS
       for (let i = 0; i < project.entityDocuments.length; i++) {
         const entityDocument = project.entityDocuments[i];
         await entityDocumentController.Delete(entityDocument);
       }
-      const usersWithProject = await User.find({ projects: project._id });
 
+      // REMOVE PROJECTS FROM USERS
+      const usersWithProject = await User.find({ projects: project._id });
       for (let i = 0; i < usersWithProject.length; i++) {
         const user = usersWithProject[i];
         const index = user.projects.indexOf(project._id);
         user.projects.splice(index, 1);
         await userController.Update(user, user);
       }
+
+      // REMOVE BOARDS AND COMMENTS
+      const projectBoards = await kanbanBoardModel.find({projectId: project._id});
+      for(let i = 0; i < projectBoards.length; i++) {
+        const board = projectBoards[i];
+        const boardCards = await kanbanBoardCardModel.find({boardId: board._id});
+
+        for(let j = 0; j < boardCards.length; j++) {
+          const card = boardCards[i];
+
+          const comments = await kanbanBoardCommentModel.find({cardId: card._id});
+          comments.forEach(async c => {
+            await kanbanBoardCardCommentController.Delete(c._id);
+          })
+
+          await kanbanBoardCardController.Delete(card._id);
+        }
+
+        await kanbanBoardController.Delete(board._id);
+      }
+
 
       let deleted = await Project.findByIdAndDelete(id);
 

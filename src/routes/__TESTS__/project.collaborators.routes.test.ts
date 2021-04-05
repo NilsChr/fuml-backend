@@ -95,10 +95,9 @@ describe("Project Collaborators routes", () => {
     const mId = mongoose.Types.ObjectId(project._id);
     expect(updatedUserToAdd.projects).toContainEqual(mId);
 
-
     const postCollaboratorRes2 = await request(app)
-    .get("/api/projects/" + project._id + "/collaborators")
-    .set({ Authorization: "Bearer " + token });
+      .get("/api/projects/" + project._id + "/collaborators")
+      .set({ Authorization: "Bearer " + token });
 
     expect(postCollaboratorRes2.body.length).toBe(2);
   });
@@ -153,8 +152,55 @@ describe("Project Collaborators routes", () => {
     expect(updatedUserToAdd2.projects).not.toContainEqual(mId);
   });
 
-  it("Should try to get project collaborators with unauthorized user and get 403", async () => {
+  it("Should add a collaborator user2 with user1, then user2 should remove itself from project", async () => {
+    const token1 = await testUtilFirebase.loginFirebase();
+    const resAccount1 = await request(app)
+      .get("/api/account")
+      .set({ Authorization: "Bearer " + token1 })
+      .send();
 
+    const user: IUser = (<any>resAccount1).body;
+    const projectBody = {
+      title: "firstTestTitle",
+    };
+
+    const postProjectRes = await request(app)
+      .post("/api/projects")
+      .set({ Authorization: "Bearer " + token1 })
+      .send(projectBody);
+
+    const project: IProject = (<any>postProjectRes).body;
+
+    const token2 = await testUtilFirebase.loginFirebase2();
+    const resAccount2 = await request(app)
+      .get("/api/account")
+      .set({ Authorization: "Bearer " + token2 })
+      .send();
+
+    const user2: IUser = (<any>resAccount2).body;
+
+    const postCollaboratorRes = await request(app)
+      .post("/api/projects/" + project._id + "/collaborators")
+      .set({ Authorization: "Bearer " + token1 })
+      .send({ _id: user2._id });
+
+    expect(postCollaboratorRes.status).toBe(201);
+
+
+    const deleteCollaboratorRes = await request(app)
+      .delete(
+        "/api/projects/" +
+          project._id +
+          "/collaborators/" +
+          user2._id
+      )
+      .set({ Authorization: "Bearer " + token2 });
+
+    expect(deleteCollaboratorRes.status).toBe(200);
+
+  });
+
+  it("Should try to get project collaborators with unauthorized user and get 403", async () => {
     const token = await testUtilFirebase.loginFirebase();
     const token2 = await testUtilFirebase.loginFirebase2();
 
@@ -182,7 +228,5 @@ describe("Project Collaborators routes", () => {
       .get("/api/projects/" + project._id + "/collaborators")
       .set({ Authorization: "Bearer " + token2 });
     expect(getCollaboratorRes.status).toBe(403);
-
   });
-
 });
