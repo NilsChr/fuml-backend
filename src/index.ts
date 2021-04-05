@@ -1,3 +1,6 @@
+
+
+
 const path = require("path");
 const dotenv = require("dotenv");
 dotenv.config({
@@ -16,10 +19,12 @@ import routeRegistry from "./routes/routeRegistry";
 const app: Application = express();
 const port = process.env.PORT || 8080;
 
-//app.use(bodyParser.json( {limit: '100mb'}));
+const httpLogger = require('./middlewares/logger.middleware');
+import logger from "./config/winston";
+app.use(httpLogger);
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-
 app.use(cors());
 app.options('*', cors());
 
@@ -43,9 +48,9 @@ app.get("/", (req: Request, res: Response) =>
   res.send("Welcome to fuml. Api at /api/")
 );
 
-export const server = app.listen(port, () =>
-  console.log(`Application started successfully on port ${port}.`)
-);
+export const server = app.listen(port, () => {
+  logger.info(`Application started successfully on port ${port}.`)
+});
 
 if(process.env.NODE_ENV !== 'test') {
   const db = process.env.DB_URI;

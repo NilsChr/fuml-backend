@@ -7,6 +7,7 @@ import sequenceDocumentController from "../controllers/sequenceDocument.controll
 import entityDocumentController from "../controllers/entityDocument.controller";
 import { apiRoutes } from "./routeRegistry";
 import kanbanBoardController from "../controllers/kanban/kanbanBoard.controller";
+import logger from "../config/winston";
 
 export default ({ app }: TRoutesInput) => {
 
@@ -49,6 +50,8 @@ export default ({ app }: TRoutesInput) => {
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
       const projects = await projectController.GetForCollaborator(req.user._id);
+      logger.info(projects);
+
       logRes(200, projects);
       return res.status(200).send(projects);
     }

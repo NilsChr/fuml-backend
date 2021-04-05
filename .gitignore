@@ -20,3 +20,4 @@ bogsynth-firebase-adminsdk.json
 package-lock.json
 
 secrets
+logs/*
