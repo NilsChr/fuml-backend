@@ -1,9 +1,10 @@
 import logger from "../config/winston";
 
 const logReq = (req: any, res: any, next: any) => {
-  if (process.env.NODE_ENV === "development") {
+  return next();
+  /*if (process.env.NODE_ENV === "development") {
     return next();
-  }
+  }*/
 
   // console.log(req);
   //console.log("--------Incoming Request---------");
@@ -16,16 +17,17 @@ const logReq = (req: any, res: any, next: any) => {
 };
 
 const logRes = (statusCode: number, body: any) => {
-  if (process.env.NODE_ENV === "development") {
+  return;
+  /*if (process.env.NODE_ENV === "development") {
     return;
-  }
+  }*/
   //console.log(">>>>>>Response");
   //console.log("Status: ", statusCode);
   //console.log("Body: ", body);
 
   logger.info(">>>>>>Response");
-  logger.info("Status: ", statusCode);
-  logger.info("Body: ", body);
+  logger.info("Status: " + statusCode);
+  logger.info("Body: " + body);
 };
 
 export { logReq, logRes };

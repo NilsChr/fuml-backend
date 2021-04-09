@@ -21,7 +21,7 @@ function Create(
     labels: [],
     description: "",
     status: kanbanBoardCard.status || KanbanBoardCardStatus.todo,
-    assignees: [],
+    assignees: [kanbanBoardCard.ownerId],
     archived: false
   };
   return KanbanBoardCard.create(card)
