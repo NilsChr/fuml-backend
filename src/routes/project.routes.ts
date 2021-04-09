@@ -8,6 +8,7 @@ import entityDocumentController from "../controllers/entityDocument.controller";
 import { apiRoutes } from "./routeRegistry";
 import kanbanBoardController from "../controllers/kanban/kanbanBoard.controller";
 import logger from "../config/winston";
+import textDocumentController from "../controllers/textDocument.controller";
 
 export default ({ app }: TRoutesInput) => {
 
@@ -28,6 +29,7 @@ export default ({ app }: TRoutesInput) => {
           title: req.body.title,
           entityDocuments: [],
           sequenceDocuments: [],
+          textDocuments: [],
           ownerId: req.user._id,
           created: new Date().getTime(),
           collaborators: [],
@@ -101,6 +103,14 @@ export default ({ app }: TRoutesInput) => {
         if(!doc) continue;
         documents.push(doc);
       }
+
+      for(let i = 0; i < requestedProject.textDocuments.length; i++) {
+        const docId = requestedProject.textDocuments[i];
+        const doc = await textDocumentController.GetById(docId);
+        if(!doc) continue;
+        documents.push(doc);
+      }
+
 
       logRes(200, documents);
       return res.status(200).send(documents);

@@ -13,6 +13,7 @@ import kanbanBoardController from "./kanban/kanbanBoard.controller";
 import kanbanBoardCardController from "./kanban/kanbanBoardCard.controller";
 import kanbanBoardCardCommentController from "./kanban/kanbanBoardCardComment.controller";
 import sequenceDocumentController from "./sequenceDocument.controller";
+import textDocumentController from "./textDocument.controller";
 import userController from "./user.controller";
 
 function Create(project: IProjectDTO): Promise<IProject> {
@@ -109,6 +110,7 @@ function Update(
         collaborators: updates.collaborators,
         entityDocuments: updates.entityDocuments,
         sequenceDocuments: updates.sequenceDocuments,
+        textDocuments: updates.textDocuments,
       };
 
       const updatedProject = await Project.findByIdAndUpdate(
@@ -141,6 +143,12 @@ function Delete(id: mongoose.Types.ObjectId): Promise<boolean> {
         await entityDocumentController.Delete(entityDocument);
       }
 
+      // DELETE TEXT DOCUMENTS
+      for (let i = 0; i < project.textDocuments.length; i++) {
+        const textDocument = project.textDocuments[i];
+        await textDocumentController.Delete(textDocument);
+      }
+
       // REMOVE PROJECTS FROM USERS
       const usersWithProject = await User.find({ projects: project._id });
       for (let i = 0; i < usersWithProject.length; i++) {
@@ -151,25 +159,30 @@ function Delete(id: mongoose.Types.ObjectId): Promise<boolean> {
       }
 
       // REMOVE BOARDS AND COMMENTS
-      const projectBoards = await kanbanBoardModel.find({projectId: project._id});
-      for(let i = 0; i < projectBoards.length; i++) {
+      const projectBoards = await kanbanBoardModel.find({
+        projectId: project._id,
+      });
+      for (let i = 0; i < projectBoards.length; i++) {
         const board = projectBoards[i];
-        const boardCards = await kanbanBoardCardModel.find({boardId: board._id});
+        const boardCards = await kanbanBoardCardModel.find({
+          boardId: board._id,
+        });
 
-        for(let j = 0; j < boardCards.length; j++) {
+        for (let j = 0; j < boardCards.length; j++) {
           const card = boardCards[i];
 
-          const comments = await kanbanBoardCommentModel.find({cardId: card._id});
-          comments.forEach(async c => {
+          const comments = await kanbanBoardCommentModel.find({
+            cardId: card._id,
+          });
+          comments.forEach(async (c) => {
             await kanbanBoardCardCommentController.Delete(c._id);
-          })
+          });
 
           await kanbanBoardCardController.Delete(card._id);
         }
 
         await kanbanBoardController.Delete(board._id);
       }
-
 
       let deleted = await Project.findByIdAndDelete(id);
 

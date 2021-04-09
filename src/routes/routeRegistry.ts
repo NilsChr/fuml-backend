@@ -8,11 +8,13 @@ import servicesRoutes from "./services.routes";
 import kanbanBoardRoutes from "./kanbanRoutes/kanbanBoard.routes";
 import kanbanBoardCardRoutes from "./kanbanRoutes/kanbanBoardCard.routes";
 import kanbanBoardCommentRoutes from "./kanbanRoutes/kanbanBoardComment.routes";
+import textDocumentsRoutes from "./textDocuments.routes";
 
 export const apiRoutes = {
     projects: '/api/projects',
     entityDocuments: '/api/entitydocuments',
     sequenceDocuments: '/api/sequencedocuments',
+    textDocuments: '/api/textdocuments',
     services: '/api/services',
     users: '/api/users',
 
@@ -23,9 +25,15 @@ export default ({ app }: TRoutesInput) => {
     userRoutes({app});
     projectRoutes({app});
     projectCollaboratorRoutes({app});
+
+    // Services
+    servicesRoutes({app});
+
+    // Documents
     entityDocumentsRoutes({app});
     sequenceDocumentsRoutes({app});
-    servicesRoutes({app});
+    textDocumentsRoutes({app});
+
 
     // Kanban
     kanbanBoardRoutes({app});
