@@ -84,7 +84,7 @@ describe("Entity Document Controller", () => {
     const card = await kanbanBoardCardController.Create(constructor);
 
     expect(card).not.toBeNull();
-    expect(card.assignees.length).toBe(0);
+    expect(card.assignees.length).toBe(1);
     expect(card.labels.length).toBe(0);
     expect(card.created).not.toBe(undefined);
   });

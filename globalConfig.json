@@ -1,1 +1,1 @@
-{"mongoDBName":"jest","mongoUri":"mongodb://127.0.0.1:55172/jest?","useUnifiedTopology":true,"useFindAndModify":false}
+{"mongoDBName":"jest","mongoUri":"mongodb://127.0.0.1:54327/jest?","useUnifiedTopology":true,"useFindAndModify":false}

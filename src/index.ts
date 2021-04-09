@@ -14,9 +14,11 @@ import cors from "cors";
 
 import apicache from 'apicache';
 import routeRegistry from "./routes/routeRegistry";
+const helmet = require("helmet");
 
 
 const app: Application = express();
+app.use(helmet());
 const port = process.env.PORT || 8080;
 
 const httpLogger = require('./middlewares/logger.middleware');
