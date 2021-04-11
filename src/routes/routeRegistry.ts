@@ -9,6 +9,7 @@ import kanbanBoardRoutes from "./kanbanRoutes/kanbanBoard.routes";
 import kanbanBoardCardRoutes from "./kanbanRoutes/kanbanBoardCard.routes";
 import kanbanBoardCommentRoutes from "./kanbanRoutes/kanbanBoardComment.routes";
 import textDocumentsRoutes from "./textDocuments.routes";
+import stripeWebhookRoutes from "./stripeRoutes/stripeWebhook.routes";
 
 export const apiRoutes = {
     projects: '/api/projects',
@@ -18,7 +19,9 @@ export const apiRoutes = {
     services: '/api/services',
     users: '/api/users',
 
-    kanbanboards: '/api/kanbanboards'
+    kanbanboards: '/api/kanbanboards',
+
+    stripe: '/api/stripe'
 }
 
 export default ({ app }: TRoutesInput) => {
@@ -39,4 +42,7 @@ export default ({ app }: TRoutesInput) => {
     kanbanBoardRoutes({app});
     kanbanBoardCardRoutes({app});
     kanbanBoardCommentRoutes({app});
+
+    // Strike
+    stripeWebhookRoutes({app});
 }

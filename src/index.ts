@@ -1,6 +1,3 @@
-
-
-
 const path = require("path");
 const dotenv = require("dotenv");
 dotenv.config({
@@ -12,23 +9,41 @@ import bodyParser from "body-parser";
 import connect from "./connect";
 import cors from "cors";
 
-import apicache from 'apicache';
+import apicache from "apicache";
 import routeRegistry from "./routes/routeRegistry";
 const helmet = require("helmet");
-
 
 const app: Application = express();
 app.use(helmet());
 const port = process.env.PORT || 8080;
 
-const httpLogger = require('./middlewares/logger.middleware');
+const httpLogger = require("./middlewares/logger.middleware");
 import logger from "./config/winston";
 app.use(httpLogger);
 
-app.use(bodyParser.json({limit: '2mb'}));
+// Enables retrieval of raw body
+// Use JSON parser for all non-webhook routes
+
+app.use(
+  (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ): void => {
+    if (req.originalUrl === "/api/stripe/webhook") {
+      next();
+    } else {
+      bodyParser.json({ limit: "2mb" })(req, res, next);
+      //bodyParser.urlencoded({ extended: true })(req, res, next);
+    }
+  }
+);
+
+
+//app.use(bodyParser.json({limit: '2mb'}));
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(cors());
-app.options('*', cors());
+app.options("*", cors());
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -51,14 +66,14 @@ app.get("/", (req: Request, res: Response) =>
 );
 
 export const server = app.listen(port, () => {
-  logger.info(`Application started successfully on port ${port}.`)
+  logger.info(`Application started successfully on port ${port}.`);
 });
 
-if(process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV !== "test") {
   const db = process.env.DB_URI;
   connect({ db });
 }
 
-routeRegistry({app});
+routeRegistry({ app });
 
 export default app;
