@@ -170,6 +170,7 @@ function Delete(id: mongoose.Types.ObjectId): Promise<boolean> {
 
         for (let j = 0; j < boardCards.length; j++) {
           const card = boardCards[i];
+          if(!card) continue;
 
           const comments = await kanbanBoardCommentModel.find({
             cardId: card._id,

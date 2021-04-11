@@ -25,7 +25,7 @@ const httpLogger = require('./middlewares/logger.middleware');
 import logger from "./config/winston";
 app.use(httpLogger);
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '2mb'}));
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(cors());
 app.options('*', cors());

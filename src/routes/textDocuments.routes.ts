@@ -7,6 +7,7 @@ import sequenceDocumentController from "../controllers/sequenceDocument.controll
 import { apiRoutes } from "./routeRegistry";
 import { ITextDocumentConstructor } from "../models/textDocument.model";
 import textDocumentController from "../controllers/textDocument.controller";
+import memoryUtil from "../util/memoryCheck";
 
 export default ({ app }: TRoutesInput) => {
   /**
@@ -85,6 +86,11 @@ export default ({ app }: TRoutesInput) => {
           return res.status(403).send();
         }
         const updates = req.body;
+
+        const size = memoryUtil.memorySizeOfInBytes(updates);
+        if(size > 2500000) {
+            return res.status(403).send();
+        }
 
         const updatedDocument = await textDocumentController.Update(
           requestedDocument,

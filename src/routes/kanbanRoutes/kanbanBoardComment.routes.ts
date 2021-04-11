@@ -94,8 +94,11 @@ export default ({ app }: TRoutesInput) => {
 
       //const commentId = req.params.commentId;
       //const comment = await kanbanBoardCardCommentController.GetById(commentId);
-      const comments = await kanbanBoardCardController.GetComments(cardId);
+      let comments = await kanbanBoardCardController.GetComments(cardId);
 
+      comments = comments.sort((a: any,b:any) => {
+        return b.created - a.created;
+      })
 
       logRes(200, comments);
       return res.status(200).send(comments);
