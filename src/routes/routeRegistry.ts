@@ -10,6 +10,7 @@ import kanbanBoardCardRoutes from "./kanbanRoutes/kanbanBoardCard.routes";
 import kanbanBoardCommentRoutes from "./kanbanRoutes/kanbanBoardComment.routes";
 import textDocumentsRoutes from "./textDocuments.routes";
 import stripeWebhookRoutes from "./stripeRoutes/stripeWebhook.routes";
+import stripeIntegrationRoutes from "./stripeRoutes/stripeIntegration.routes";
 
 export const apiRoutes = {
     projects: '/api/projects',
@@ -45,4 +46,5 @@ export default ({ app }: TRoutesInput) => {
 
     // Strike
     stripeWebhookRoutes({app});
+    stripeIntegrationRoutes({app});
 }

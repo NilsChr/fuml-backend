@@ -34,13 +34,10 @@ app.use(
       next();
     } else {
       bodyParser.json({ limit: "2mb" })(req, res, next);
-      //bodyParser.urlencoded({ extended: true })(req, res, next);
     }
   }
 );
 
-
-//app.use(bodyParser.json({limit: '2mb'}));
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(cors());
 app.options("*", cors());

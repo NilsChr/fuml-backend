@@ -3,6 +3,7 @@ import { checkIfAuthenticated } from "../middlewares/auth.middleware";
 import { logReq, logRes } from "../middlewares/log.middleware";
 import userController from "../controllers/user.controller";
 import { apiRoutes } from "./routeRegistry";
+import customerController from "../controllers/customer/customer.controller";
 
 export default ({ app }: TRoutesInput) => {
   /**
@@ -14,8 +15,14 @@ export default ({ app }: TRoutesInput) => {
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
       const user = req.user;
-      logRes(200, user);
-      res.status(200).send(user);
+      const customer = await customerController.GetByUserId(user._id);
+
+      const data = {
+        user,
+        customer
+      }
+      logRes(200, data);
+      res.status(200).send(data);
     }
   );
 
