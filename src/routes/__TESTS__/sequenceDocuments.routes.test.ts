@@ -6,7 +6,10 @@ import userController from "../../controllers/user.controller";
 import testUtilFirebase from "../../controllers/__TESTS__/testUtilFirebase";
 import app, { server } from "../../index";
 import { IProject } from "../../models/project.model";
-import { ISequenceDocumentPart, ISequenceDocumentConstructor } from "../../models/sequenceDocument.model";
+import {
+  ISequenceDocumentPart,
+  ISequenceDocumentConstructor,
+} from "../../models/sequenceDocument.model";
 import { IUser } from "../../models/user.model";
 
 describe("Sequence Document routes", () => {
@@ -37,7 +40,7 @@ describe("Sequence Document routes", () => {
       .set({ Authorization: "Bearer " + token })
       .send();
 
-    const user: IUser = (<any>res).body;
+    const user: IUser = (<any>res).body.user;
 
     const postProjectRes = await request(app)
       .post("/api/projects")
@@ -58,7 +61,9 @@ describe("Sequence Document routes", () => {
       .send(constructor);
 
     expect(postSequenceRes.status).toBe(201);
-    const doc = await sequenceDocumentController.GetById(postSequenceRes.body._id);
+    const doc = await sequenceDocumentController.GetById(
+      postSequenceRes.body._id
+    );
     expect(doc).not.toBeNull();
 
     const updatedProject = await projectController.GetById(project._id);
@@ -72,7 +77,7 @@ describe("Sequence Document routes", () => {
       .set({ Authorization: "Bearer " + token })
       .send();
 
-    const user: IUser = (<any>res).body;
+    const user: IUser = (<any>res).body.user;
 
     let constructor: ISequenceDocumentConstructor = {
       title: "sequenceTitle",
@@ -86,7 +91,9 @@ describe("Sequence Document routes", () => {
       .send(constructor);
     expect(postEntityRes.status).toBe(404);
 
-    const doc = await sequenceDocumentController.GetById(postEntityRes.body._id);
+    const doc = await sequenceDocumentController.GetById(
+      postEntityRes.body._id
+    );
     expect(doc).toBeNull();
   });
 
@@ -97,7 +104,7 @@ describe("Sequence Document routes", () => {
       .set({ Authorization: "Bearer " + token })
       .send();
 
-    const user: IUser = (<any>res).body;
+    const user: IUser = (<any>res).body.user;
     const postProjectRes = await request(app)
       .post("/api/projects")
       .set({ Authorization: "Bearer " + token })
@@ -120,7 +127,7 @@ describe("Sequence Document routes", () => {
     const doc = await sequenceDocumentController.GetById(postRes.body._id);
     expect(doc).not.toBeNull();
 
-    const participant = {title:'firebase'};
+    const participant = { title: "firebase" };
     doc.participants.push(participant);
 
     const updateRes = await request(app)
@@ -130,7 +137,6 @@ describe("Sequence Document routes", () => {
     expect(updateRes.status).toBe(200);
   });
 
-  
   it("Should update a sequence document by adding an sequencePart ", async () => {
     const token = await testUtilFirebase.loginFirebase();
     const res = await request(app)
@@ -138,7 +144,7 @@ describe("Sequence Document routes", () => {
       .set({ Authorization: "Bearer " + token })
       .send();
 
-    const user: IUser = (<any>res).body;
+    const user: IUser = (<any>res).body.user;
     const postProjectRes = await request(app)
       .post("/api/projects")
       .set({ Authorization: "Bearer " + token })
@@ -164,9 +170,9 @@ describe("Sequence Document routes", () => {
     const part: ISequenceDocumentPart = {
       title: "2234",
       block: false,
-      code: '',
+      code: "",
       editorOpen: false,
-      visible: false
+      visible: false,
     };
     doc.parts.push(part);
 
@@ -177,7 +183,6 @@ describe("Sequence Document routes", () => {
     expect(updateRes.status).toBe(200);
   });
 
-
   it("Should delete sequence document ", async () => {
     const token = await testUtilFirebase.loginFirebase();
     const res = await request(app)
@@ -185,7 +190,7 @@ describe("Sequence Document routes", () => {
       .set({ Authorization: "Bearer " + token })
       .send();
 
-    const user: IUser = (<any>res).body;
+    const user: IUser = (<any>res).body.user;
     const postProjectRes = await request(app)
       .post("/api/projects")
       .set({ Authorization: "Bearer " + token })
@@ -214,9 +219,7 @@ describe("Sequence Document routes", () => {
 
     expect(delRes.status).toBe(200);
 
-    const docAfter = await sequenceDocumentController.GetById(
-      postRes.body._id
-    );
+    const docAfter = await sequenceDocumentController.GetById(postRes.body._id);
     expect(docAfter).toBeNull();
   });
 });

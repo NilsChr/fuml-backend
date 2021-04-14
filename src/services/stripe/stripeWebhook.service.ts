@@ -1,5 +1,6 @@
 import express from "express";
 import Stripe from "stripe";
+import logger from "../../config/winston";
 import customerController from "../../controllers/customer/customer.controller";
 import { CustomerInvoice } from "../../models/customer/customer.model";
 import { stripe } from "./stripe.service";
@@ -41,6 +42,9 @@ const stripeWebhook = {
             res = await stripeWebhook.handleCheckoutSessionCompleted(event);
             return resolve(res);
         }
+
+        logger.warn("Stripe Webhook not handled. Type: " + event.type);
+        console.log(event);
 
         resolve({});
       } catch (e) {

@@ -18,8 +18,14 @@ const config = {
 
 firebase.initializeApp(config);
 
+let tokens = {
+  token1: '',
+  token2: ''
+}
+
 const testUtilFirebase = {
   async loginFirebase() {
+    if(tokens.token1 !== '') return tokens.token1;
     const email = process.env.FIREBASE_LOGIN_EMAIL;
     const password = process.env.FIREBASE_LOGIN_PASSWORD;
 
@@ -31,9 +37,12 @@ const testUtilFirebase = {
       .auth()
       .signInWithEmailAndPassword(email, password);
     const token = await firebase.auth().currentUser.getIdToken();
+    tokens.token1 = token;
     return token;
   },
   async loginFirebase2() {
+    if(tokens.token2 !== '') return tokens.token2;
+
     const email = process.env.FIREBASE_LOGIN_EMAIL2;
     const password = process.env.FIREBASE_LOGIN_PASSWORD2;
 
@@ -45,6 +54,7 @@ const testUtilFirebase = {
       .auth()
       .signInWithEmailAndPassword(email, password);
     const token = await firebase.auth().currentUser.getIdToken();
+    tokens.token2 = token;
     return token;
   },
   async signOut() {

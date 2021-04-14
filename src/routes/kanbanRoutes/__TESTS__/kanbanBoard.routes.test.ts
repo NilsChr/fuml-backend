@@ -24,7 +24,7 @@ describe("Kanban board routes", () => {
         .set({ Authorization: "Bearer " + token })
         .send();
 
-      const user: IUser = (<any>res).body;
+      const user: IUser = (<any>res).body.user;
 
       const project = await testUtil.generateRandomProject(user._id);
 
@@ -43,7 +43,7 @@ describe("Kanban board routes", () => {
         .set({ Authorization: "Bearer " + token2 })
         .send();
 
-      const user2: IUser = (<any>res).body;
+      const user2: IUser = (<any>res).body.user;
 
       resolve({ user2, token2 });
     });

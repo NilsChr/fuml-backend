@@ -36,9 +36,9 @@ describe("Project Collaborators routes", () => {
       .set({ Authorization: "Bearer " + token })
       .send();
     expect(res.status).toEqual(200);
-    expect(res.body).toHaveProperty("_id");
+    expect(res.body.user).toHaveProperty("_id");
 
-    const user: IUser = (<any>res).body;
+    const user: IUser = (<any>res).body.user;
     const projectBody = {
       title: "firstTestTitle",
     };
@@ -69,9 +69,9 @@ describe("Project Collaborators routes", () => {
       .set({ Authorization: "Bearer " + token })
       .send();
     expect(res.status).toEqual(200);
-    expect(res.body).toHaveProperty("_id");
+    expect(res.body.user).toHaveProperty("_id");
 
-    const user: IUser = (<any>res).body;
+    const user: IUser = (<any>res).body.user;
     const projectBody = {
       title: "firstTestTitle",
     };
@@ -111,9 +111,9 @@ describe("Project Collaborators routes", () => {
       .set({ Authorization: "Bearer " + token })
       .send();
     expect(res.status).toEqual(200);
-    expect(res.body).toHaveProperty("_id");
+    expect(res.body.user).toHaveProperty("_id");
 
-    const user: IUser = (<any>res).body;
+    const user: IUser = (<any>res).body.user;
     const projectBody = {
       title: "firstTestTitle",
     };
@@ -159,7 +159,7 @@ describe("Project Collaborators routes", () => {
       .set({ Authorization: "Bearer " + token1 })
       .send();
 
-    const user: IUser = (<any>resAccount1).body;
+    const user: IUser = (<any>resAccount1).body.user;
     const projectBody = {
       title: "firstTestTitle",
     };
@@ -177,7 +177,7 @@ describe("Project Collaborators routes", () => {
       .set({ Authorization: "Bearer " + token2 })
       .send();
 
-    const user2: IUser = (<any>resAccount2).body;
+    const user2: IUser = (<any>resAccount2).body.user;
 
     const postCollaboratorRes = await request(app)
       .post("/api/projects/" + project._id + "/collaborators")
@@ -209,9 +209,9 @@ describe("Project Collaborators routes", () => {
       .set({ Authorization: "Bearer " + token })
       .send();
     expect(res.status).toEqual(200);
-    expect(res.body).toHaveProperty("_id");
+    expect(res.body.user).toHaveProperty("_id");
 
-    const user: IUser = (<any>res).body;
+    const user: IUser = (<any>res).body.user;
     const projectBody = {
       title: "firstTestTitle",
     };

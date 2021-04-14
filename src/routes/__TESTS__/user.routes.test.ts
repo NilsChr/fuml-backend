@@ -31,9 +31,9 @@ describe("User routes", () => {
       .set({ Authorization: "Bearer " + token })
       .send();
     expect(res.status).toEqual(200);
-    expect(res.body).toHaveProperty("_id");
+    expect(res.body.user).toHaveProperty("_id");
 
-    const user: IUser = (<any>res).body;
+    const user: IUser = (<any>res).body.user;
 
     expect(user).not.toBeNull();
 
@@ -50,8 +50,8 @@ describe("User routes", () => {
       .set({ Authorization: "Bearer " + token })
       .send();
     expect(res.status).toEqual(200);
-    expect(res.body).toHaveProperty("_id");
-    const user: IUser = (<any>res).body;
+    expect(res.body.user).toHaveProperty("_id");
+    const user: IUser = (<any>res).body.user;
 
     expect(user).not.toBeNull();
 
@@ -75,14 +75,14 @@ describe("User routes", () => {
       .set({ Authorization: "Bearer " + token })
       .send();
     expect(res.status).toEqual(200);
-    expect(res.body).toHaveProperty("_id");
+    expect(res.body.user).toHaveProperty("_id");
 
-    const user: IUser = (<any>res).body;
+    const user: IUser = (<any>res).body.user;
 
     expect(user).not.toBeNull();
 
     const res2 = await request(app)
-      .get("/api/users/" + res1.body._id)
+      .get("/api/users/" + res1.body.user._id)
       .set({ Authorization: "Bearer " + token });
     expect(res2.status).toEqual(403);
     expect(res2.body._id).toBe(undefined);
@@ -95,7 +95,7 @@ describe("User routes", () => {
       .set({ Authorization: "Bearer " + token })
       .send();
 
-    const user: IUser = (<any>res).body;
+    const user: IUser = (<any>res).body.user;
 
     user.nickName = "master";
     const res2 = await request(app)
@@ -118,7 +118,7 @@ describe("User routes", () => {
 
       expect(res.status).toBe(200);
     
-    const user: IUser = (<any>res).body;
+    const user: IUser = (<any>res).body.user;
 
     expect(user._id).not.toBe(undefined);
 
@@ -128,7 +128,7 @@ describe("User routes", () => {
       .set({ Authorization: "Bearer " + token2 })
       .send();
 
-    const user2: IUser = (<any>res2).body;
+    const user2: IUser = (<any>res2).body.user;
     expect(user2._id).not.toBe(undefined);
     const originalName = user2.nickName;
     expect(originalName).not.toBe(undefined);
@@ -154,7 +154,7 @@ describe("User routes", () => {
       .set({ Authorization: "Bearer " + token })
       .send();
 
-    const user: IUser = (<any>res).body;
+    const user: IUser = (<any>res).body.user;
 
     const res2 = await request(app)
       .delete("/api/users/" + user._id)

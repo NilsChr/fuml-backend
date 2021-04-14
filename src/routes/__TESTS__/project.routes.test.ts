@@ -35,9 +35,9 @@ describe("Project routes", () => {
       .set({ Authorization: "Bearer " + token })
       .send();
     expect(res.status).toEqual(200);
-    expect(res.body).toHaveProperty("_id");
+    expect(res.body.user).toHaveProperty("_id");
 
-    const user: IUser = (<any>res).body;
+    const user: IUser = (<any>res).body.user;
     const projectBody = {
       title: "firstTestTitle",
     };
@@ -63,9 +63,9 @@ describe("Project routes", () => {
       .set({ Authorization: "Bearer " + token })
       .send();
     expect(res.status).toEqual(200);
-    expect(res.body).toHaveProperty("_id");
+    expect(res.body.user).toHaveProperty("_id");
 
-    const user: IUser = (<any>res).body;
+    const user: IUser = (<any>res).body.user;
     const projectBody = {
       title: "",
     };
@@ -86,9 +86,9 @@ describe("Project routes", () => {
       .set({ Authorization: "Bearer " + token })
       .send();
     expect(res.status).toEqual(200);
-    expect(res.body).toHaveProperty("_id");
+    expect(res.body.user).toHaveProperty("_id");
 
-    const user: IUser = (<any>res).body;
+    const user: IUser = (<any>res).body.user;
     const projectBody = {
       title: "firstTestTitle",
     };
@@ -121,9 +121,9 @@ describe("Project routes", () => {
       .set({ Authorization: "Bearer " + token })
       .send();
     expect(res.status).toEqual(200);
-    expect(res.body).toHaveProperty("_id");
+    expect(res.body.user).toHaveProperty("_id");
 
-    const user: IUser = (<any>res).body;
+    const user: IUser = (<any>res).body.user;
 
     const token2 = await testUtilFirebase.loginFirebase2();
     const res2 = await request(app)
@@ -131,9 +131,9 @@ describe("Project routes", () => {
       .set({ Authorization: "Bearer " + token2 })
       .send();
     expect(res2.status).toEqual(200);
-    expect(res2.body).toHaveProperty("_id");
+    expect(res2.body.user).toHaveProperty("_id");
 
-    const user2: IUser = (<any>res2).body;
+    const user2: IUser = (<any>res2).body.user;
 
     const projectBody = {
       title: "firstTestTitle",

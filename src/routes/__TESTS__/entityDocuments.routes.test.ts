@@ -37,7 +37,7 @@ describe("Entity Document routes", () => {
       .set({ Authorization: "Bearer " + token })
       .send();
 
-    const user: IUser = (<any>res).body;
+    const user: IUser = (<any>res).body.user;
 
     const postProjectRes = await request(app)
       .post("/api/projects")
@@ -72,7 +72,7 @@ describe("Entity Document routes", () => {
       .set({ Authorization: "Bearer " + token })
       .send();
 
-    const user: IUser = (<any>res).body;
+    const user: IUser = (<any>res).body.user;
 
     let constructor: IEntityDocumentConstructor = {
       title: "entityTitle",
@@ -97,7 +97,7 @@ describe("Entity Document routes", () => {
       .set({ Authorization: "Bearer " + token })
       .send();
 
-    const user: IUser = (<any>res).body;
+    const user: IUser = (<any>res).body.user;
     const postProjectRes = await request(app)
       .post("/api/projects")
       .set({ Authorization: "Bearer " + token })
@@ -142,7 +142,7 @@ describe("Entity Document routes", () => {
       .set({ Authorization: "Bearer " + token })
       .send();
 
-    const user: IUser = (<any>res).body;
+    const user: IUser = (<any>res).body.user;
     const postProjectRes = await request(app)
       .post("/api/projects")
       .set({ Authorization: "Bearer " + token })
@@ -187,7 +187,7 @@ describe("Entity Document routes", () => {
       .set({ Authorization: "Bearer " + token })
       .send();
 
-    const user: IUser = (<any>res).body;
+    const user: IUser = (<any>res).body.user;
     const postProjectRes = await request(app)
       .post("/api/projects")
       .set({ Authorization: "Bearer " + token })

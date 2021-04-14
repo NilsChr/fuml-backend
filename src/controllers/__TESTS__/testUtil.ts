@@ -43,6 +43,7 @@ const testUtil = {
         ownerId: ownerId,
         created: new Date().getTime(),
         collaborators: [],
+        textDocuments: []
       });
       resolve(project);
     });
