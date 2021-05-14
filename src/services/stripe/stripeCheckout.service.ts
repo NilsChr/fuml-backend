@@ -35,7 +35,7 @@ const stripeProducts = {
       }
 
       const now = new Date().getTime() / 1000;
-      const activePlan = customer.invoices.filter(i => i.period_start <= now && i.period_end >= now && i.active && !i.refunded);
+      const activePlan = customer.invoices.filter(i => i.period_start <= now && i.period_end >= now && !i.refunded);
       if(activePlan.length > 0) {
         return reject(CHECKOUT_ERROR.ACTIVE_PLAN_EXISTS);
       }
