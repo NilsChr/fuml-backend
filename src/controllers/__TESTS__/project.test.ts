@@ -29,7 +29,6 @@ describe("User Controller", () => {
     expect(project.ownerId).toEqual(user._id);
     expect(project.entityDocuments.length).toEqual(0);
     expect(project.sequenceDocuments.length).toEqual(0);
-
     expect(project.collaborators.length).toEqual(1);
   });
 

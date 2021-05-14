@@ -46,7 +46,8 @@ const checkIfAuthenticated = (req: any, res: any, next: any) => {
           googleId: userInfo.uid,
           isAdmin: false,
           projects: [],
-          created: new Date().getTime()
+          created: new Date().getTime(),
+          selectedTheme: 2
         });
       }
 

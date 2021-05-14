@@ -28,6 +28,7 @@ const testUtil = {
         isAdmin: false,
         projects: [],
         created: new Date().getTime(),
+        selectedTheme: 2,
       });
       resolve(user);
     });

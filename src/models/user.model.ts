@@ -8,6 +8,7 @@ export interface IUser extends Document {
   avatarUrl: String;
   isAdmin: Boolean;
   projects: mongoose.Types.ObjectId[];
+  selectedTheme: Number;
 }
 
 export interface IUserDTO {
@@ -18,6 +19,7 @@ export interface IUserDTO {
   avatarUrl: String;
   isAdmin: Boolean;
   projects: mongoose.Types.ObjectId[];
+  selectedTheme: Number;
 }
 
 export interface IUserUpdatesDTO {
@@ -25,6 +27,7 @@ export interface IUserUpdatesDTO {
   nickName: string;
   avatarUrl: String;
   projects: mongoose.Types.ObjectId[];
+  selectedTheme: Number;
 }
 
 const UserSchema: Schema = new Schema({
@@ -33,6 +36,7 @@ const UserSchema: Schema = new Schema({
   nickName: { type: String, unique: false, sparse: true },
   created: { type: Number, default: Date.now() },
   avatarUrl: { type: String },
+  selectedTheme: { type: Number },
   isAdmin: { type: Boolean },
   projects: [{ type: mongoose.Types.ObjectId, ref: "Project" }],
 });

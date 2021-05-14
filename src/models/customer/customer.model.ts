@@ -10,6 +10,7 @@ const CustomerInvoiceSchema: Schema = new Schema({
   payment_intent: { type: String },
   refunded: { type: Boolean },
   active: { type: Boolean },
+  cancelled: { type: Boolean },
   stripeSubscriptionId: { type: String },
   stripeProductId: { type: String },
   stripeProductName: { type: String },
@@ -25,6 +26,7 @@ export class CustomerInvoice {
   payment_intent: String;
   refunded: boolean;
   active: boolean;
+  cancelled: boolean;
   stripeSubscriptionId: String;
   stripeProductId: String;
   stripeProductName: String;

@@ -11,7 +11,6 @@ import logger from "../config/winston";
 import textDocumentController from "../controllers/textDocument.controller";
 
 export default ({ app }: TRoutesInput) => {
-
   /**
    * Post Projects
    */
@@ -34,8 +33,13 @@ export default ({ app }: TRoutesInput) => {
           created: new Date().getTime(),
           collaborators: [],
         };
-        const newProject = await projectController.Create(projectData);
-        res.status(201).send(newProject);
+        try {
+          const newProject = await projectController.Create(projectData);
+          res.status(201).send(newProject);
+        } catch (e) {
+          console.log("CREATE ERROR", e);
+          res.status(200).send({ status: "failed", message: e });
+        }
       } catch (e) {
         console.log(e);
         res.status(500).send();
@@ -79,7 +83,7 @@ export default ({ app }: TRoutesInput) => {
   /**
    * Get Project documents
    */
-   app.get(
+  app.get(
     apiRoutes.projects + "/:id/documents",
     logReq,
     checkIfAuthenticated,
@@ -90,27 +94,26 @@ export default ({ app }: TRoutesInput) => {
       }
 
       let documents = [];
-      for(let i = 0; i < requestedProject.sequenceDocuments.length; i++) {
+      for (let i = 0; i < requestedProject.sequenceDocuments.length; i++) {
         const docId = requestedProject.sequenceDocuments[i];
         const doc = await sequenceDocumentController.GetById(docId);
-        if(!doc) continue;
+        if (!doc) continue;
         documents.push(doc);
       }
 
-      for(let i = 0; i < requestedProject.entityDocuments.length; i++) {
+      for (let i = 0; i < requestedProject.entityDocuments.length; i++) {
         const docId = requestedProject.entityDocuments[i];
         const doc = await entityDocumentController.GetById(docId);
-        if(!doc) continue;
+        if (!doc) continue;
         documents.push(doc);
       }
 
-      for(let i = 0; i < requestedProject.textDocuments.length; i++) {
+      for (let i = 0; i < requestedProject.textDocuments.length; i++) {
         const docId = requestedProject.textDocuments[i];
         const doc = await textDocumentController.GetById(docId);
-        if(!doc) continue;
+        if (!doc) continue;
         documents.push(doc);
       }
-
 
       logRes(200, documents);
       return res.status(200).send(documents);
@@ -120,7 +123,7 @@ export default ({ app }: TRoutesInput) => {
   /**
    * Get Project boards
    */
-   app.get(
+  app.get(
     apiRoutes.projects + "/:id/boards",
     logReq,
     checkIfAuthenticated,
@@ -129,7 +132,9 @@ export default ({ app }: TRoutesInput) => {
       if (!requestedProject.collaborators.includes(req.user._id)) {
         return res.status(403).send();
       }
-      const boards = await kanbanBoardController.GetAllProjectBoards(requestedProject._id)
+      const boards = await kanbanBoardController.GetAllProjectBoards(
+        requestedProject._id
+      );
       logRes(200, boards);
       return res.status(200).send(boards);
     }
@@ -146,7 +151,7 @@ export default ({ app }: TRoutesInput) => {
       try {
         const requestedProject = await projectController.GetById(req.params.id);
 
-        if(!requestedProject) {
+        if (!requestedProject) {
           return res.status(404).send();
         }
 
@@ -177,8 +182,8 @@ export default ({ app }: TRoutesInput) => {
     async (req: any, res: any, next: any) => {
       try {
         const requestedProject = await projectController.GetById(req.params.id);
-        
-        if(!requestedProject) {
+
+        if (!requestedProject) {
           return res.status(404).send();
         }
 

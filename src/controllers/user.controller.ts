@@ -93,6 +93,7 @@ function Update(user: IUser, updates: IUserUpdatesDTO): Promise<IUser> {
         nickName: updates.nickName,
         avatarUrl: updates.avatarUrl,
         projects: updates.projects,
+        selectedTheme: updates.selectedTheme
       };
 
       if(!sanitizedUpdates.nickName) {

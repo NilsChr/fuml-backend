@@ -56,7 +56,7 @@ export default ({ app }: TRoutesInput) => {
         if (!requestedUser._id.equals(req.user._id)) {
           return res.status(403).send();
         }
-        const updates = req.body;
+        const updates = req.body.user;
 
         const updatedUser = await userController.Update(requestedUser, updates);
         logRes(200, updatedUser);

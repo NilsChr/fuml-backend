@@ -8,6 +8,7 @@ import Project, {
   IProjectUpdatesDTO,
 } from "../models/project.model";
 import User, { IUser } from "../models/user.model";
+import customerController from "./customer/customer.controller";
 import entityDocumentController from "./entityDocument.controller";
 import kanbanBoardController from "./kanban/kanbanBoard.controller";
 import kanbanBoardCardController from "./kanban/kanbanBoardCard.controller";
@@ -16,7 +17,30 @@ import sequenceDocumentController from "./sequenceDocument.controller";
 import textDocumentController from "./textDocument.controller";
 import userController from "./user.controller";
 
-function Create(project: IProjectDTO): Promise<IProject> {
+const MAX_USER_PROJECTS = 3;
+
+async function Create(project: IProjectDTO): Promise<IProject> {
+
+
+  // Get user customer
+  const user = await userController.GetById(project.ownerId);
+  const customer = await customerController.GetByUserId(user._id);
+  const userProjects = await GetForCollaborator(user);
+
+  if(userProjects.length >= MAX_USER_PROJECTS) {
+    console.log('CREATE PROJECT');
+    console.log('customer', customer);
+    if(!customer) return new Promise((resolve, reject) => reject('No plan active for this user.'));
+    const now = new Date().getTime() / 1000;
+    const invoicesForThisPeriod = customer.invoices.filter(i => i.period_start <= now && i.period_end >= now && i.active && !i.refunded);
+    if(invoicesForThisPeriod.length == 0) {
+      return new Promise((resolve, reject) => reject('No plan active for this user.'));
+    }
+
+  }
+
+
+
   project.collaborators.push(project.ownerId);
   return Project.create(project)
     .then(async (data: IProject) => {

@@ -14,6 +14,9 @@ const stripeEvents = {
   charge: {
     succeeded: "charge.succeeded",
   },
+  subscription_schedule: {
+    canceled: "subscription_schedule.canceled"
+  }
 };
 
 const endpointSecret = "whsec_qgXTFm4Ike1xXYgxfNpx2ARdUXmPGYhf";
@@ -40,6 +43,9 @@ const stripeWebhook = {
             return resolve(res);
           case stripeEvents.checkout.sessions.completed:
             res = await stripeWebhook.handleCheckoutSessionCompleted(event);
+            return resolve(res);
+            case stripeEvents.subscription_schedule.canceled:
+            res = await stripeWebhook.handleSubscriptionScheduleCanceled(event);
             return resolve(res);
         }
 
@@ -95,12 +101,35 @@ const stripeWebhook = {
         payment_intent: <any>stripeInvoice.payment_intent,
         refunded: false,
         active: true,
+        cancelled: false,
         stripeSubscriptionId: subscription.id,
         stripeProductId: product.id,
         stripeProductName: product.name
       };
 
+      console.log('Invoice', invoice);
       customer.invoices.push(invoice);
+      await customerController.Update(customer, customer);
+
+      resolve({});
+    });
+  },
+
+  handleSubscriptionScheduleCanceled(event: Stripe.Event): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      console.log("TYPE: ", stripeEvents.subscription_schedule.canceled);
+      const eventId = event.id;
+      console.log("Event id", eventId);
+
+      const customer = await customerController.GetByStripeId((<any>event.data.object).customer);
+
+      console.log(customer);
+      for(let i = 0; i < customer.invoices.length; i++) {
+        if(customer.invoices[i].stripeSubscriptionId == event.id) {
+          customer.invoices[i].active = false;
+          customer.invoices[i].cancelled = true;
+        }
+      }
       await customerController.Update(customer, customer);
 
       resolve({});

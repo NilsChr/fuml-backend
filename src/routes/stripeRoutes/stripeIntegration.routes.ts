@@ -12,6 +12,7 @@ import {
   CHECKOUT_ERROR,
   stripeCheckout,
 } from "../../services/stripe/stripeCheckout.service";
+import customerController from "../../controllers/customer/customer.controller";
 
 export default ({ app }: TRoutesInput) => {
   app.get(
@@ -39,22 +40,53 @@ export default ({ app }: TRoutesInput) => {
           coupon: body.coupon,
           stripePrice: body.stripePrice,
         };
+        console.log("Checkout data", checkoutData);
 
         const session = await stripeService.checkout.createCheckout(
           user,
           checkoutData
         );
 
-        res.status(200).send({message:'success', session: session});
+        console.log("session", session);
+        res.status(200).send({ message: "success", session: session });
       } catch (e) {
+        console.log(e);
         if (e == CHECKOUT_ERROR.ACTIVE_PLAN_EXISTS) {
-          res.status(200).send({message:CHECKOUT_ERROR.ACTIVE_PLAN_EXISTS, session: null});
+          res
+            .status(200)
+            .send({
+              message: CHECKOUT_ERROR.ACTIVE_PLAN_EXISTS,
+              session: null,
+            });
         } else {
           console.log(e);
 
-          res.status(500).send({message:'error', session: null});
+          res.status(500).send({ message: "error", session: null });
         }
       }
+    }
+  );
+
+  app.post(
+    apiRoutes.stripe + "/cancelSubscription",
+    logReq,
+    checkIfAuthenticated,
+    async (req: any, res: any, next: any) => {
+
+      let data:any = req.body;
+
+      console.log(data);
+      await stripeService.subscriptions.cancelSubscription(data.subscription_id);
+      const customer = await customerController.GetByUserId(req.user._id);
+      console.log(customer);
+      for(let i = 0; i < customer.invoices.length; i++) {
+        if(customer.invoices[i].stripeSubscriptionId == data.subscription_id) {
+          customer.invoices[i].active = false;
+          customer.invoices[i].cancelled = true;
+        }
+      }
+      await customerController.Update(customer, customer);
+      res.status(200).send();
     }
   );
 };
