@@ -85,7 +85,7 @@ function Update(
         cardsTodo: updates.cardsTodo,
         cardsPending:  updates.cardsPending,
         cardsInProgress:  updates.cardsInProgress,
-        cardsDone:  updates.cardsDone
+        cardsDone:  updates.cardsDone,
       };
 
       const updatedBoard = await KanbanBoard.findByIdAndUpdate(
@@ -119,7 +119,6 @@ function Delete(id: mongoose.Types.ObjectId): Promise<boolean> {
 
         await kanbanBoardCardModel.findByIdAndDelete(card._id);
       })
-
 
       const deleted = await KanbanBoard.findByIdAndDelete(id);
 

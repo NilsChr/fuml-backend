@@ -30,9 +30,17 @@ async function Create(project: IProjectDTO): Promise<IProject> {
   if(userProjects.length >= MAX_USER_PROJECTS) {
     console.log('CREATE PROJECT');
     console.log('customer', customer);
-    if(!customer) return new Promise((resolve, reject) => reject('No plan active for this user.'));
-    const now = new Date().getTime() / 1000;
-    const invoicesForThisPeriod = customer.invoices.filter(i => i.period_start <= now && i.period_end >= now && i.active && !i.refunded);
+    if(!customer) return new Promise((resolve, reject) => reject('No plan active for this user. No customer tied to the user.'));
+    const now = new Date().getTime();
+
+    console.log(new Date(now).toLocaleDateString("en-US")); // 9/17/2016
+    customer.invoices.forEach(i => {
+      console.log('invoice')
+      console.log(new Date(i.period_start * 1000).toLocaleDateString("en-US")); // 9/17/2016
+      console.log(new Date(i.period_end * 1000).toLocaleDateString("en-US")); // 9/17/2016
+    })
+
+    const invoicesForThisPeriod = customer.invoices.filter(i => i.period_start * 1000 <= now && i.period_end * 1000 >= now && i.active && !i.refunded);
     if(invoicesForThisPeriod.length == 0) {
       return new Promise((resolve, reject) => reject('No plan active for this user.'));
     }

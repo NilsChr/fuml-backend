@@ -15,12 +15,13 @@ export default ({ app }: TRoutesInput) => {
     async (req: any, res: any, next: any) => {
       const userNameSearch = req.body.search;
       if(userNameSearch == '') {
-        res.status(200).send([]);
+        return res.status(200).send([]);
       }
       const users = await userController.GetByNickname(userNameSearch);
       //  const user = req.user;
       logRes(200, users);
-      res.status(200).send(users);
+      console.log("HERE")
+      return res.status(200).send(users);
     }
   );
 

@@ -20,9 +20,9 @@ function Create(
     completed: null,
     labels: [],
     description: "",
-    status: kanbanBoardCard.status || KanbanBoardCardStatus.todo,
+    status: kanbanBoardCard.status || KanbanBoardCardStatus.todo,
     assignees: [kanbanBoardCard.ownerId],
-    archived: false
+    archived: false,
   };
   return KanbanBoardCard.create(card)
     .then(async (data: IKanbanBoardCardSchema) => {
@@ -53,14 +53,16 @@ function GetById(id: mongoose.Types.ObjectId): Promise<IKanbanBoardCardSchema> {
   });
 }
 
-function GetAllCardsForBoard(id: mongoose.Types.ObjectId): Promise<IKanbanBoardCardSchema[]> {
-    return new Promise(async (resolve, reject) => {
-        const query = { boardId: id };
+function GetAllCardsForBoard(
+  id: mongoose.Types.ObjectId
+): Promise<IKanbanBoardCardSchema[]> {
+  return new Promise(async (resolve, reject) => {
+    const query = { boardId: id };
 
-      const card = await KanbanBoardCard.find(query);
-      return resolve(card);
-    });
-  }
+    const card = await KanbanBoardCard.find(query);
+    return resolve(card);
+  });
+}
 
 function GetComments(
   cardId: mongoose.Types.ObjectId
@@ -84,12 +86,16 @@ function Update(
         description: updates.description,
         status: updates.status,
         assignees: updates.assignees,
-        completed: updates.completed
+        completed: updates.completed,
+        archived: updates.archived
       };
 
-      if(sanitizedUpdates.status != KanbanBoardCardStatus.done) {
-          sanitizedUpdates.completed = null;
-      } else if(sanitizedUpdates.status == KanbanBoardCardStatus.done && !sanitizedUpdates.completed){
+      if (sanitizedUpdates.status != KanbanBoardCardStatus.done) {
+        sanitizedUpdates.completed = null;
+      } else if (
+        sanitizedUpdates.status == KanbanBoardCardStatus.done &&
+        !sanitizedUpdates.completed
+      ) {
         sanitizedUpdates.completed = new Date().getTime();
       }
 

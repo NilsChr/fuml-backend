@@ -14,15 +14,20 @@ export default ({ app }: TRoutesInput) => {
     logReq,
     checkIfAuthenticated,
     async (req: any, res: any, next: any) => {
-      const user = req.user;
-      const customer = await customerController.GetByUserId(user._id);
-
-      const data = {
-        user,
-        customer
+      try {
+        const user = req.user;
+        const customer = await customerController.GetByUserId(user._id);
+  
+        const data = {
+          user,
+          customer
+        }
+        logRes(200, data);
+        res.status(200).send(data);
+      } catch(e) {
+        res.status(500).send();
       }
-      logRes(200, data);
-      res.status(200).send(data);
+
     }
   );
 

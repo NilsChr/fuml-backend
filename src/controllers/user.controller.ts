@@ -70,6 +70,7 @@ function GetByNickname(nickname: string): Promise<any[]> {
     try {
       const query = { nickName: {$regex : new RegExp(".*" + nickname + ".*", "i")} };
       const users = await User.find(query).limit(5);
+      console.log("USERS", users);
       const usersOut = users.map(u => {
         return {
           _id: u._id,
@@ -77,6 +78,8 @@ function GetByNickname(nickname: string): Promise<any[]> {
           avatarUrl: u.avatarUrl
         }
       })
+      console.log("USERS OUT", users);
+
       resolve(usersOut);
     } catch (e) {
       console.log(e);
