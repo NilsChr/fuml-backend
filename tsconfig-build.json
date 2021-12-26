@@ -12,9 +12,10 @@
       "paths": {
         "*": ["node_modules/*", "src/types/*"]
       }
-    },
-    "include": ["src/**/___TESTS__/*"],
+    },    
+    "include": ["src/**/*"],
     "exclude": [
-      "node_modules"
+      "node_modules",
+      "src/**/___TESTS__/*"
   ]
   }
