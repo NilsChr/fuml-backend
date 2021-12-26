@@ -76,7 +76,8 @@ describe("User Controller", () => {
         avatarUrl:newAvatarUrl,
         email: newMail,
         nickName: newNick,
-        projects: []
+        projects: [],
+        selectedTheme: 1
     }
     const updated = await userController.Update(user, updates);
 
