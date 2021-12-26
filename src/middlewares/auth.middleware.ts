@@ -1,10 +1,13 @@
 import firebase from "firebase-admin";
 import UserController from "../controllers/user.controller";
 
+var serviceAccount = process.env.FB_CREDS;
+//console.log(`Service account = ${serviceAccount}`);
+
 firebase.initializeApp({
-  credential: firebase.credential.applicationDefault(),
-  databaseURL: "https://bogsynth.firebaseio.com",
+  credential: firebase.credential.cert(JSON.parse(serviceAccount))
 });
+
 
 const getAuthToken = (req: any, res: any, next: any) => {
   if (
