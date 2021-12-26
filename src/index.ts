@@ -40,6 +40,7 @@ app.use(
 
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(cors());
+/*
 app.options("*", cors());
 
 app.use(function (req, res, next) {
@@ -57,7 +58,7 @@ app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Headers", "Authorization");
   next();
 });
-
+*/
 app.get("/", (req: Request, res: Response) =>
   res.send("Welcome to fuml. Api at /api/")
 );
