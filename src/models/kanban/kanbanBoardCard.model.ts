@@ -28,6 +28,7 @@ export interface IKanbanBoardCardSchema extends Document {
   labels: mongoose.Types.ObjectId[];
   assignees: mongoose.Types.ObjectId[];
   archived: boolean;
+  hasComments: boolean;
 }
 
 export interface IKanbanBoardCardDTO {
@@ -41,6 +42,7 @@ export interface IKanbanBoardCardDTO {
   labels: mongoose.Types.ObjectId[];
   assignees: mongoose.Types.ObjectId[];
   archived: boolean;
+  hasComments: boolean;
 }
 
 const KanbanBoardCardSchema: Schema = new Schema({
@@ -54,7 +56,8 @@ const KanbanBoardCardSchema: Schema = new Schema({
   description: { type: String },
   //labels: [{ title: { type: String }, color: { type: String } }],
   labels: [{type: mongoose.Types.ObjectId}],
-  archived: { type: Boolean}
+  archived: { type: Boolean},
+  hasComments: { type: Boolean}
 });
 
 export default mongoose.model<IKanbanBoardCardSchema>(

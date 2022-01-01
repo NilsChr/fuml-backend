@@ -23,6 +23,7 @@ function Create(
     status: kanbanBoardCard.status || KanbanBoardCardStatus.todo,
     assignees: [kanbanBoardCard.ownerId],
     archived: false,
+    hasComments: false
   };
   return KanbanBoardCard.create(card)
     .then(async (data: IKanbanBoardCardSchema) => {
@@ -87,7 +88,8 @@ function Update(
         status: updates.status,
         assignees: updates.assignees,
         completed: updates.completed,
-        archived: updates.archived
+        archived: updates.archived,
+        hasComments: updates.hasComments
       };
 
       if (sanitizedUpdates.status != KanbanBoardCardStatus.done) {

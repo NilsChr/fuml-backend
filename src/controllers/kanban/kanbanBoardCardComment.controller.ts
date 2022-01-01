@@ -4,8 +4,9 @@ import KanbanBoardCardComment, {
   IKanbanBoardCardCommentDTO,
   IKanbanBoardCardCommentSchema,
 } from "../../models/kanban/kanbanBoardComment.model";
+import kanbanBoardCardController from "./kanbanBoardCard.controller";
 
-function Create(
+async function Create(
   kanbanBoardCardComment: IKanbanBoardCardCommentConstructor
 ): Promise<IKanbanBoardCardCommentSchema> {
   const comment: IKanbanBoardCardCommentDTO = {
@@ -14,6 +15,14 @@ function Create(
     text: kanbanBoardCardComment.text,
     created: new Date().getTime(),
   };
+
+  const card = await kanbanBoardCardController.GetById(comment.cardId);
+  if(card) {
+    console.log("FOUND CARD");
+    card.hasComments = true;
+    await kanbanBoardCardController.Update(card, card);
+  }
+
   return KanbanBoardCardComment.create(comment)
     .then(async (data: IKanbanBoardCardCommentSchema) => {
       return data;
