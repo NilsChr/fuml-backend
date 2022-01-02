@@ -21,12 +21,12 @@ export default ({ app }: TRoutesInput) => {
 
       try {
         await stripeService.webhooks.handleEvent(req);
+        return res.json({ received: true });
       } catch(e) {
         logger.error(e);
-        res.status(500).send();
+        return res.status(500).send();
       }
       
-      res.json({ received: true });
     }
   );
 
