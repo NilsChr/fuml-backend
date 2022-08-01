@@ -40,7 +40,7 @@ app.use(
 
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(cors());
-app.options('*', cors());
+//app.options('*', cors());
 /*
 app.options("*", cors());
 

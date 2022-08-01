@@ -27,7 +27,7 @@ async function Create(project: IProjectDTO): Promise<IProject> {
   const customer = await customerController.GetByUserId(user._id);
   const userProjects = await GetForCollaborator(user);
 
-  if(userProjects.length >= MAX_USER_PROJECTS) {
+  if(userProjects.length >= MAX_USER_PROJECTS && user.email !== 'nils.chr.bogen@gmail.com') {
     console.log('CREATE PROJECT');
     console.log('customer', customer);
     if(!customer) return new Promise((resolve, reject) => reject('No plan active for this user. No customer tied to the user.'));
